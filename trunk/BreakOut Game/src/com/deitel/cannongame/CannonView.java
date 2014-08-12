@@ -134,8 +134,8 @@ public class CannonView extends SurfaceView
       screenWidth = w; // store the width
       screenHeight = h; // store the height
 
-      cannonballRadius = w / 48; // cannonball radius 1/36 screen width
-      cannonballSpeed = w*2/3; // cannonball speed multiplier
+      cannonballRadius = w / 120; // cannonball radius 1/36 screen width
+      cannonballSpeed = w*2/1200; // cannonball speed multiplier
 
       lineWidth = w / 24; // target and blocker 1/24 screen width
 
@@ -214,7 +214,7 @@ public class CannonView extends SurfaceView
    // called repeatedly by the CannonThread to update game elements
    private void updatePositions(double elapsedTimeMS)
    {
-      double interval = elapsedTimeMS / 1000.0; // convert to seconds
+      double interval = elapsedTimeMS; // convert to seconds
 
       if (cannonballFired) // if there is currently a shot fired
       {
@@ -281,10 +281,7 @@ public class CannonView extends SurfaceView
               showGameOverDialog(R.string.win); // show winning dialog
               gameOver = true; // the game is over
      	 }
-        	 
-
       } // end if
-
    } // end method updatePositions
 
    // fires a cannonball
@@ -413,8 +410,7 @@ public class CannonView extends SurfaceView
              // move curPoint to the start of the next piece
              currentPoint.x += pieceLength;
           } // end for
-      }     
-      
+      }
    } // end method drawGameElements
 
    // display an AlertDialog when the game ends
@@ -507,18 +503,6 @@ public class CannonView extends SurfaceView
       } // end while
    } // end method surfaceDestroyed
    
-   // Thread subclass to control the game loop
-   private class CollisionDectect extends Thread
-   {
-	   private boolean collisionDectRunning = true;
-	   
-	   public CollisionDectect(){
-		   
-	   }
-	   public void run(){
-		   
-	   }
-   }
    // Thread subclass to control the game loop
    private class CannonThread extends Thread
    {

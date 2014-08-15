@@ -2,9 +2,18 @@
 // Main Activity for the Cannon Game app.
 package com.deitel.cannongame;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -16,7 +25,18 @@ public class CannonGame extends Activity implements OnClickListener {
 	private GestureDetector gestureDetector; // listens for double taps
 	private CannonView cannonView; // custom view to display the game
 	private Button enter, help;
+	
+	private Button btnDownload; //btnDownload. added by JunHan 15/08/2014
 
+	//Handler. added by JunHan 15/08/2014
+	@SuppressLint("HandlerLeak")
+	private Handler handler =new Handler(){
+		 @Override
+		 public void handleMessage(Message msg){
+		 super.handleMessage(msg);
+		//Do main
+		 }
+		 };
 	// called when the app first launches
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -26,9 +46,12 @@ public class CannonGame extends Activity implements OnClickListener {
 		enter = (Button) findViewById(R.id.enterBut);
 
 		help = (Button) findViewById(R.id.helpBut);
+		
+		btnDownload = (Button)findViewById(R.id.btnDownload);
 
 		enter.setOnClickListener(this);
 		help.setOnClickListener(this);
+		btnDownload.setOnClickListener(this);
 
 		// allow volume keys to set game volume
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -46,6 +69,22 @@ public class CannonGame extends Activity implements OnClickListener {
 			gestureDetector = new GestureDetector(this, gestureListener);
 		}
 
+		if (v.getId() == R.id.btnDownload) {
+			 
+			new Thread(){
+				 @Override
+				 public void run()
+				{
+					 String url = "http://192.168.1.4:8080/BreakOutGameServer/DownloadServlet?fileName=test";
+						Download load = new Download(url);
+						String value = load.downloadAsString();
+						Log.d("log", value);
+				 handler.sendEmptyMessage(0);
+				 }
+				 }.start();
+				 
+			
+		}
 		if (v.getId() == R.id.helpBut) {
 
 		}

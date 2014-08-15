@@ -5,16 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/enterBut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginBottom="152dp"
-        android:layout_marginLeft="46dp"
-        android:text="Enter" />
-
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
@@ -34,6 +24,15 @@
         android:layout_marginBottom="25dp"
         android:text="Welcome to the"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+<!-- Added by JunHan 15/08/2014 -->
+    <Button
+        android:id="@+id/btnDownload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/helpBut"
+        android:layout_alignBottom="@+id/helpBut"
+        android:layout_centerHorizontal="true"
+        android:text="Download" />
 
     <Button
         android:id="@+id/helpBut"
@@ -41,7 +40,18 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/enterBut"
         android:layout_alignBottom="@+id/enterBut"
+        android:layout_marginLeft="14dp"
         android:layout_toRightOf="@+id/textView1"
         android:text="Help" />
+
+    <Button
+        android:id="@+id/enterBut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="142dp"
+        android:layout_marginRight="16dp"
+        android:layout_toLeftOf="@+id/textView1"
+        android:text="Enter" />
 
 </RelativeLayout>

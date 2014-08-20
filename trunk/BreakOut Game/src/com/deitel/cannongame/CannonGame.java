@@ -2,13 +2,15 @@
 // Main Activity for the Cannon Game app.
 package com.deitel.cannongame;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +27,8 @@ public class CannonGame extends Activity implements OnClickListener {
 	private GestureDetector gestureDetector; // listens for double taps
 	private CannonView cannonView; // custom view to display the game
 	private Button enter, help;
+	private final static String SERVER_URL="10.9.250.124";
+	private static String FILE_NAME="test";
 	
 	private Button btnDownload; //btnDownload. added by JunHan 15/08/2014
 
@@ -56,7 +60,24 @@ public class CannonGame extends Activity implements OnClickListener {
 		// allow volume keys to set game volume
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 	} // end method onCreate
+    public void writeFiles(String name, String file){
+//    	Log.d("log", "writeFiles");
+    	try {
+			FileOutputStream fos=this.openFileOutput(name,Context.MODE_PRIVATE);
+			fos.write(file.getBytes());
+//			Log.d("log", new String(file.getBytes()));
+			fos.close();
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    }
 
+    	
 	public void onClick(View v) {
 
 		if (v.getId() == R.id.enterBut) {
@@ -70,15 +91,17 @@ public class CannonGame extends Activity implements OnClickListener {
 		}
 
 		if (v.getId() == R.id.btnDownload) {
+			
 			 
 			new Thread(){
 				 @Override
 				 public void run()
 				{
-					 String url = "http://192.168.1.4:8080/BreakOutGameServer/DownloadServlet?fileName=test";
+					 String url = "http://"+ SERVER_URL +":8080/BreakOutGameServer/DownloadServlet?fileName="+FILE_NAME;
 						Download load = new Download(url);
 						String value = load.downloadAsString();
 						Log.d("log", value);
+						writeFiles(FILE_NAME + ".xml",value);
 				 handler.sendEmptyMessage(0);
 				 }
 				 }.start();
@@ -86,7 +109,28 @@ public class CannonGame extends Activity implements OnClickListener {
 			
 		}
 		if (v.getId() == R.id.helpBut) {
-
+			try {
+				String[] s = this.fileList();
+				Log.d("log", s[0].toString());
+				int len=-1;
+				FileInputStream fis= this.openFileInput(s[0].toString());
+				byte[] buffer = new byte[1024];
+				ByteArrayOutputStream ostream = new ByteArrayOutputStream();
+				while((len=fis.read(buffer))!=-1){
+                    ostream.write(buffer, 0, len);
+           }
+				fis.close();
+				ostream.close();
+				String strFile = new String(buffer,"UTF-8");
+//				= readFiles(fis);
+				Log.d("log", "readFile->"+strFile);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

@@ -27,20 +27,22 @@ public class CannonGame extends Activity implements OnClickListener {
 	private GestureDetector gestureDetector; // listens for double taps
 	private CannonView cannonView; // custom view to display the game
 	private Button enter, help;
-	private final static String SERVER_URL="10.9.250.124";
-	private static String FILE_NAME="test";
-	
-	private Button btnDownload; //btnDownload. added by JunHan 15/08/2014
+	// added by JunHan 16/08/2014
+	private final static String SERVER_URL = "10.9.250.124";
+	private static String FILE_NAME = "test";
 
-	//Handler. added by JunHan 15/08/2014
+	private Button btnDownload; // btnDownload. added by JunHan 15/08/2014
+
+	// Handler. added by JunHan 15/08/2014
 	@SuppressLint("HandlerLeak")
-	private Handler handler =new Handler(){
-		 @Override
-		 public void handleMessage(Message msg){
-		 super.handleMessage(msg);
-		//Do main
-		 }
-		 };
+	private Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			// Do main
+		}
+	};
+
 	// called when the app first launches
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,8 +52,8 @@ public class CannonGame extends Activity implements OnClickListener {
 		enter = (Button) findViewById(R.id.enterBut);
 
 		help = (Button) findViewById(R.id.helpBut);
-		
-		btnDownload = (Button)findViewById(R.id.btnDownload);
+
+		btnDownload = (Button) findViewById(R.id.btnDownload);
 
 		enter.setOnClickListener(this);
 		help.setOnClickListener(this);
@@ -60,14 +62,19 @@ public class CannonGame extends Activity implements OnClickListener {
 		// allow volume keys to set game volume
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 	} // end method onCreate
-    public void writeFiles(String name, String file){
-//    	Log.d("log", "writeFiles");
-    	try {
-			FileOutputStream fos=this.openFileOutput(name,Context.MODE_PRIVATE);
+
+	/**
+	 * write download file to local Modified by JunHan 20/08/2014
+	 * */
+	public void writeFiles(String name, String file) {
+		// Log.d("log", "writeFiles");
+		try {
+			FileOutputStream fos = this.openFileOutput(name,
+					Context.MODE_PRIVATE);
 			fos.write(file.getBytes());
-//			Log.d("log", new String(file.getBytes()));
+			// Log.d("log", new String(file.getBytes()));
 			fos.close();
-			
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,9 +82,8 @@ public class CannonGame extends Activity implements OnClickListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-    }
+	}
 
-    	
 	public void onClick(View v) {
 
 		if (v.getId() == R.id.enterBut) {
@@ -89,41 +95,42 @@ public class CannonGame extends Activity implements OnClickListener {
 			// initialize the GestureDetector
 			gestureDetector = new GestureDetector(this, gestureListener);
 		}
-
+		// download. Added by JunHan 15/08/2014
 		if (v.getId() == R.id.btnDownload) {
-			
-			 
-			new Thread(){
-				 @Override
-				 public void run()
-				{
-					 String url = "http://"+ SERVER_URL +":8080/BreakOutGameServer/DownloadServlet?fileName="+FILE_NAME;
-						Download load = new Download(url);
-						String value = load.downloadAsString();
-						Log.d("log", value);
-						writeFiles(FILE_NAME + ".xml",value);
-				 handler.sendEmptyMessage(0);
-				 }
-				 }.start();
-				 
-			
+
+			new Thread() {
+				@Override
+				public void run() {
+					String url = "http://"
+							+ SERVER_URL
+							+ ":8080/BreakOutGameServer/DownloadServlet?fileName="
+							+ FILE_NAME;
+					Download load = new Download(url);
+					String value = load.downloadAsString();
+					Log.d("log", value);
+					writeFiles(FILE_NAME + ".xml", value);
+					handler.sendEmptyMessage(0);
+				}
+			}.start();
+
 		}
 		if (v.getId() == R.id.helpBut) {
+			// test read file function. added by JunHan 20/08/2014
 			try {
 				String[] s = this.fileList();
 				Log.d("log", s[0].toString());
-				int len=-1;
-				FileInputStream fis= this.openFileInput(s[0].toString());
+				int len = -1;
+				FileInputStream fis = this.openFileInput(s[0].toString());
 				byte[] buffer = new byte[1024];
 				ByteArrayOutputStream ostream = new ByteArrayOutputStream();
-				while((len=fis.read(buffer))!=-1){
-                    ostream.write(buffer, 0, len);
-           }
+				while ((len = fis.read(buffer)) != -1) {
+					ostream.write(buffer, 0, len);
+				}
 				fis.close();
 				ostream.close();
-				String strFile = new String(buffer,"UTF-8");
-//				= readFiles(fis);
-				Log.d("log", "readFile->"+strFile);
+				String strFile = new String(buffer, "UTF-8");
+				// = readFiles(fis);
+				Log.d("log", "readFile->" + strFile);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

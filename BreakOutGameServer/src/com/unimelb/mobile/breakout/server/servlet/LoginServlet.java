@@ -52,7 +52,7 @@ public class LoginServlet extends HttpServlet {
 //		hs.setAttribute("login", user.getUid());
 //		hs.setAttribute("username", user.getUsername());
 //		hs.setAttribute("score", user.getScore());
-		response.getWriter().write("Welcome,"+user.getUsername()+"<br>Your highest score is: "+user.getScore());  
+		response.getWriter().write("Welcome, "+user.getUsername()+".<br>Your highest score is: "+user.getScore());  
 		System.out.print(user.getScore());
 		}else{
 //		hs.setAttribute("login", 0);

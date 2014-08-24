@@ -8,4 +8,10 @@
    <string name="lose">You lose!</string>
    <string name="time_used_format">
       Time used: %.1f seconds</string>
+    
+    <string name="welcome">Welcome to BreakOut Game</string>
+    <string name="games">Games</string>
+    <string name="login">Login</string>
+    <string name="forgetpass">Forget passward</string>
+    <string name="regist">Regist</string>
 </resources>

@@ -47,7 +47,7 @@ public class LoginServlet extends HttpServlet {
 		IUserDao userDao = new UserDaoImpl();
 		User user = new User();
 		user  = userDao.checkLogin(username, password);
-		HttpSession hs = request.getSession();
+//		HttpSession hs = request.getSession();
 		if(user!=null){
 //		hs.setAttribute("login", user.getUid());
 //		hs.setAttribute("username", user.getUsername());

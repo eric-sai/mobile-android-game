@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/RegistLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome" />
+
+        <EditText
+            android:id="@+id/username_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="username"
+            android:textColorHint="#238745"
+            android:maxLength="40" />
+
+        <EditText
+            android:id="@+id/passward_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="passward"
+            android:textColorHint="#238745"
+            android:maxLength="40" />
+        <EditText 
+            android:id="@+id/confirmpass_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="passward"
+            android:textColorHint="#238745"
+            android:maxLength="40" />
+            
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/RegistLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/Button_regist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/regist" />
+    </LinearLayout>
+
+</RelativeLayout>

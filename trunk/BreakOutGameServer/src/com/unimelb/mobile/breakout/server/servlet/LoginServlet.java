@@ -63,7 +63,7 @@ public class LoginServlet extends HttpServlet {
 		response.getOutputStream().write(so.User2Bytes(user));
 		}else{
 //		hs.setAttribute("login", 0);
-		response.getWriter().write("Input error.");  
+		response.getOutputStream().write(null);
 		}
 	}
 

@@ -227,7 +227,63 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			// update cannonball position
 			cannonball.x += interval * cannonballVelocityX;
 			cannonball.y += interval * cannonballVelocityY;
-			collisionDect();
+			// check for collision with pad
+			if (cannonball.x + cannonballRadius >= pad.start.x
+					&& cannonball.x - cannonballRadius <= pad.end.x
+					&& cannonball.y + cannonballRadius >= padDistance
+					&& cannonball.y - cannonballRadius <= padDistance) {
+				
+				cannonballVelocityY *= -1; // reverse cannonball's Y direction
+				soundPool.play(soundMap.get(BLOCKER_SOUND_ID), 1, 1, 1, 0, 1f); // play pad sound
+			} // end if
+
+			// check for collisions with left or right walls
+			if (cannonball.x + cannonballRadius >= screenWidth
+					|| cannonball.x - cannonballRadius <= 0) {
+				cannonballVelocityX *= -1; // reverse cannonball's X direction
+			}
+
+			// check for collisions with top wall
+			if (cannonball.y - cannonballRadius <= 0)
+				cannonballVelocityY *= -1; // rever cannonball's Y direction
+
+			if (cannonball.y + cannonballRadius >= screenHeight) {
+
+				// the ball hits the bottom, game over.
+				cannonballVelocityY *= -1;
+				// cannonThread.setRunning(false);
+				// showGameOverDialog(R.string.lose); // show winning dialog
+				// gameOver = true; // the game is over
+			}
+
+			// check for collisions with targets
+			for (int i = 0; i < NUM_TARGET_LINE; i++) {
+				if (cannonball.x + cannonballRadius >= target[i].start.x
+						&& cannonball.x - cannonballRadius <= target[i].end.x
+						&& cannonball.y + cannonballRadius >= targetDistance[i]
+						&& cannonball.y - cannonballRadius <= targetDistance[i]) {
+					// determine target section number (0 is the top)
+					int section = (int) ((cannonball.x - target[i].start.x) / pieceLength);
+
+					// check if the piece hasn't been hit yet
+					if ((section >= 0 && section < TARGET_PIECES)
+							&& !hitStates[i][section]) {
+						hitStates[i][section] = true; // section was hit
+						cannonballVelocityY *= -1; // reverse the cannonball's Y
+													// direction
+
+						// play target hit sound
+						soundPool.play(soundMap.get(TARGET_SOUND_ID), 1, 1, 1, 0,
+								1f);
+						targetPiecesHit++;
+					}
+				}
+			}
+			if (targetPiecesHit == TARGET_PIECES * NUM_TARGET_LINE) {
+				cannonThread.setRunning(false);
+				showGameOverDialog(R.string.win); // show winning dialog
+				gameOver = true; // the game is over
+			}	
 		} // end if
 	} // end method updatePositions
 

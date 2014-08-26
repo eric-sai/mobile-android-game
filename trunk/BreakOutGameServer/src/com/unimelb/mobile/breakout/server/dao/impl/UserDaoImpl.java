@@ -38,6 +38,7 @@ public class UserDaoImpl implements IUserDao {
 			user.setUsername(rs.getString(2));
 			user.setPassword(rs.getString(3));
 			user.setScore(rs.getInt(4));
+			return user;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -45,7 +46,7 @@ public class UserDaoImpl implements IUserDao {
 		} finally{
 			this.dbconn.closeConn();
 		}
-		return user;
+		
 	}
 
 }

@@ -4,6 +4,7 @@
    <string name="results_format">
       Shots fired: %1$d\nTotal time: %2$.1f</string>
    <string name="reset_game">Reset Game</string>
+   <string name="next_level">Next Level</string>
    <string name="win">You win!</string>
    <string name="lose">You lose!</string>
    <string name="time_used_format">

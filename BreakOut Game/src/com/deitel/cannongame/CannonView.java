@@ -147,23 +147,23 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
 		// configure instance variables related to the target
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
-			targetDistance[i] = ((2 * i) + 1) * lineWidth;
-			targetBeginning[i] = w / 8;
-			targetEnd[i] = w * 7 / 8;
-			target[i].start = new Point(targetBeginning[i], targetDistance[i]);
-			target[i].end = new Point(targetEnd[i], targetDistance[i]);
+			targetDistance[i] = w - ((2 * i) + 1) * lineWidth;
+			targetBeginning[i] = h / 8;
+			targetEnd[i] = h * 7 / 8;
+			target[i].start = new Point(targetDistance[i],targetBeginning[i]);
+			target[i].end = new Point(targetDistance[i], targetEnd[i]);
 		}
 
 		pieceLength = (targetEnd[0] - targetBeginning[0]) / TARGET_PIECES;
 
 		// configure instance variables related to the pad
-		padDistance = 7 * h / 8;
-		padBeginning = w / 2;
-		padLen = w / 4;
+		padDistance = w / 8;
+		padBeginning = h / 2;
+		padLen = h / 8;
 		padEnd = padBeginning + padLen;
 		padVelocity = 0;
-		pad.start = new Point(padBeginning, padDistance);
-		pad.end = new Point(padEnd, padDistance);
+		pad.start = new Point(padDistance,padBeginning);
+		pad.end = new Point(padDistance,padEnd);
 
 		// configure Paint objects for drawing game elements
 		textPaint.setTextSize(w / 20); // text size 1/20 of screen width
@@ -195,18 +195,18 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		// blocker.end.set(blockerDistance, blockerEnd);
 
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
-			target[i].start.set(targetBeginning[i], targetDistance[i]);
-			target[i].end.set(targetEnd[i], targetDistance[i]);
+			target[i].start.set(targetDistance[i], targetBeginning[i]);
+			target[i].end.set(targetDistance[i], targetEnd[i]);
 		}
 
 		// set the pad
-		pad.start.set(padBeginning, padDistance);
-		pad.end.set(padEnd, padDistance);
+		pad.start.set(padDistance, padBeginning);
+		pad.end.set(padDistance, padEnd);
 
 		// configure instance variables related to the ball
-		cannonball.x = (padBeginning + padEnd) / 2; // align x-coordinate with
+		cannonball.x = padDistance + 20; // align x-coordinate with
 													// cannon
-		cannonball.y = padDistance - cannonballRadius - 10; // centers ball
+		cannonball.y = ( padBeginning + padEnd) / 2; // centers ball
 															// vertically
 
 		if (gameOver) {
@@ -228,12 +228,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			cannonball.x += interval * cannonballVelocityX;
 			cannonball.y += interval * cannonballVelocityY;
 			// check for collision with pad
-			if (cannonball.x + cannonballRadius >= pad.start.x
-					&& cannonball.x - cannonballRadius <= pad.end.x
-					&& cannonball.y + cannonballRadius >= padDistance
-					&& cannonball.y - cannonballRadius <= padDistance) {
+			if (cannonball.y + cannonballRadius >= pad.start.y
+					&& cannonball.y - cannonballRadius <= pad.end.y
+					&& cannonball.x + cannonballRadius >= padDistance
+					&& cannonball.x - cannonballRadius <= padDistance) {
 				
-				cannonballVelocityY *= -1; // reverse cannonball's Y direction
+				cannonballVelocityX *= -1; // reverse cannonball's X direction
 				soundPool.play(soundMap.get(BLOCKER_SOUND_ID), 1, 1, 1, 0, 1f); // play pad sound
 			} // end if
 
@@ -258,18 +258,18 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
 			// check for collisions with targets
 			for (int i = 0; i < NUM_TARGET_LINE; i++) {
-				if (cannonball.x + cannonballRadius >= target[i].start.x
-						&& cannonball.x - cannonballRadius <= target[i].end.x
-						&& cannonball.y + cannonballRadius >= targetDistance[i]
-						&& cannonball.y - cannonballRadius <= targetDistance[i]) {
+				if (cannonball.y + cannonballRadius >= target[i].start.y
+						&& cannonball.y - cannonballRadius <= target[i].end.y
+						&& cannonball.x + cannonballRadius >= targetDistance[i]
+						&& cannonball.x - cannonballRadius <= targetDistance[i]) {
 					// determine target section number (0 is the top)
-					int section = (int) ((cannonball.x - target[i].start.x) / pieceLength);
+					int section = (int) ((cannonball.y - target[i].start.y) / pieceLength);
 
 					// check if the piece hasn't been hit yet
 					if ((section >= 0 && section < TARGET_PIECES)
 							&& !hitStates[i][section]) {
 						hitStates[i][section] = true; // section was hit
-						cannonballVelocityY *= -1; // reverse the cannonball's Y
+						cannonballVelocityX *= -1; // reverse the cannonball's x
 													// direction
 
 						// play target hit sound
@@ -410,18 +410,18 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	public void movePad(MotionEvent e1, MotionEvent e2, float distanceX,
 			float distanceY) {
 		// update the pad position
-		double scrollDistance = distanceX;
+		double scrollDistance = distanceY;
 
 		// if the pad hit the top or bottom, reverse direction
-		if (pad.start.x < 0) {
-			pad.start.x = 0;
-			pad.end.x = pad.start.x + padLen;
-		} else if (pad.end.x > screenWidth) {
-			pad.end.x = screenWidth;
-			pad.start.x = pad.end.x - padLen;
+		if (pad.start.y < 0) {
+			pad.start.y = 0;
+			pad.end.y = pad.start.y + padLen;
+		} else if (pad.end.y > screenHeight) {
+			pad.end.y = screenHeight;
+			pad.start.y = pad.end.y - padLen;
 		} else {
-			pad.start.x -= scrollDistance;
-			pad.end.x -= scrollDistance;
+			pad.start.y -= scrollDistance;
+			pad.end.y -= scrollDistance;
 		}
 	}
 
@@ -465,12 +465,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						targetPaint.setColor(Color.BLUE);
 
 					canvas.drawLine(currentPoint.x, currentPoint.y,
-							(int) (currentPoint.x + pieceLength),
-							currentPoint.y, targetPaint);
+							currentPoint.x,
+							(int) (currentPoint.y + pieceLength), targetPaint);
 				} // end if
 
 				// move curPoint to the start of the next piece
-				currentPoint.x += pieceLength;
+				currentPoint.y += pieceLength;
 			} // end for
 		}
 	} // end method drawGameElements
@@ -496,6 +496,15 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 					} // end method onClick
 				} // end anonymous inner class
 				); // end call to setPositiveButton
+		dialogBuilder.setPositiveButton(R.string.next_level,
+				new DialogInterface.OnClickListener() {
+			// called when "Reset Game" Button is pressed
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialogIsDisplayed = false;
+				newGame(); }// set up and start a new game
+			} // end method onClick
+			);
 
 		activity.runOnUiThread(new Runnable() {
 			public void run() {

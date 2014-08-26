@@ -5,8 +5,14 @@
  */
 package com.unimelb.mobile.breakout.server.po;
 
+import java.io.Serializable;
 
-public class User {
+
+public class User  implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int uid;
 	private String username;
 	private String password;

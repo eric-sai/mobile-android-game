@@ -42,7 +42,8 @@ public class UserDaoImpl implements IUserDao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
+			user.setUid(0);
+			return user;
 		} finally{
 			this.dbconn.closeConn();
 		}

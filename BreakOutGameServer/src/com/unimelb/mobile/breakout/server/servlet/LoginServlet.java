@@ -51,20 +51,20 @@ public class LoginServlet extends HttpServlet {
 		User user = new User();
 		user  = userDao.checkLogin(username, password);
 //		HttpSession hs = request.getSession();
-		if(user!=null){
+//		if(user!=null){
 //		hs.setAttribute("login", user.getUid());
 //		hs.setAttribute("username", user.getUsername());
 //		hs.setAttribute("score", user.getScore());
 //		response.getWriter().write("Welcome, "+user.getUsername()+".<br>Your highest score is: "+user.getScore());  
 		
-		System.out.print(user.getScore());
+//		System.out.print(user.getScore());
 		SerializableObj so = new SerializableObj();
 		
 		response.getOutputStream().write(so.User2Bytes(user));
-		}else{
-//		hs.setAttribute("login", 0);
-		response.getOutputStream().write(null);
-		}
+//		}else{
+////		hs.setAttribute("login", 0);
+//		response.getOutputStream().write(null);
+//		}
 	}
 
 }

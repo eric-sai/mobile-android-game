@@ -91,7 +91,9 @@ public class Login extends Activity {
 		            NameValuePair nameValuePairPsd = new BasicNameValuePair("password", pass);  
 					params.add(nameValuePairUser);
 					params.add(nameValuePairPsd);
-				}else{}
+				}else{
+					
+				}
 //				HttpPost httpRequest = new HttpPost(url_login);
 				
 				

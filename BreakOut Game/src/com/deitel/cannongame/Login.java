@@ -1,6 +1,8 @@
 package com.deitel.cannongame;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,9 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.unimelb.mobile.breakout.server.po.User;
+
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -37,9 +42,12 @@ import android.view.View.OnClickListener;
 public class Login extends Activity {
 	public EditText username, password;
 	public Button Btn_login, Btn_regist, Btn_forgetpwd;
-	public String url_login = "http://192.168.1.4:8080/BreakOutGameServer/LoginServlet";
+	public String url_login = "http://10.9.250.229:8080/BreakOutGameServer/LoginServlet";
 	public List<NameValuePair> params = new ArrayList<NameValuePair>();
 	public String out = null;
+	public Object obj = null;
+	public byte[] bytes;
+	
 
 	// public String url =
 	// "http://192.168.1.100:8080/BreakOutGameServer/LoginServlet?username=junhan&password=junhan";
@@ -73,20 +81,20 @@ public class Login extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String user = username.getText().toString();
+				String strUser = username.getText().toString();
 				String pass = password.getText().toString();
 
 				
-				if ((!user.equals("")) && (!pass.equals(""))) 
+				if ((!strUser.equals("")) && (!pass.equals(""))) 
 				{
-					NameValuePair nameValuePairUser = new BasicNameValuePair("username", user);  
+					NameValuePair nameValuePairUser = new BasicNameValuePair("username", strUser);  
 		            NameValuePair nameValuePairPsd = new BasicNameValuePair("password", pass);  
 					params.add(nameValuePairUser);
 					params.add(nameValuePairPsd);
 				}else{}
 //				HttpPost httpRequest = new HttpPost(url_login);
 				
-					
+				
 					new Thread(){public void run() {
 						// TODO Auto-generated method stub
 					
@@ -96,14 +104,27 @@ public class Login extends Activity {
 					    HttpPost httpPost = new HttpPost(url_login);  
 					    httpPost.setEntity(requestHttpEntity);  
 					    HttpClient httpClient = new DefaultHttpClient();  
+					    Log.d("log", httpClient.execute(httpPost).getStatusLine().getStatusCode()+"");
 					    HttpResponse httpResponse = httpClient.execute(httpPost);  
 					    HttpEntity httpEntity = httpResponse.getEntity();  
-					    out = EntityUtils.toString(httpEntity);
-					   
+					    bytes = EntityUtils.toByteArray(httpEntity);
+//					    out = EntityUtils.toString(httpEntity);
+					    
+				        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
+				        User user = new User();
+				        user = (User)ois.readObject();
+				        Log.d("log", user.getUsername());
+				        Log.d("log", user.getPassword());
+				        Log.d("log", user.getScore()+"");
+				        ois.close();
+				        
 						} catch (ParseException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (ClassNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}  
@@ -113,7 +134,7 @@ public class Login extends Activity {
 
 }
 					}.start();
-					 new AlertDialog.Builder(Login.this).setMessage(out).create().show();  
+//					 new AlertDialog.Builder(Login.this).setMessage(user.getScore()).create().show();  
 
 				} 
 			});

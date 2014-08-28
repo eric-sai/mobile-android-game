@@ -26,17 +26,17 @@
             android:maxLength="40" />
 
         <EditText
-            android:id="@+id/passward_text"
+            android:id="@+id/password_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="passward"
+            android:hint="password"
             android:textColorHint="#238745"
             android:maxLength="40" />
         <EditText 
             android:id="@+id/confirmpass_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:hint="passward"
+            android:hint="confirm password"
             android:textColorHint="#238745"
             android:maxLength="40" />
             

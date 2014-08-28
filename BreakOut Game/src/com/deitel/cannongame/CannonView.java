@@ -16,6 +16,7 @@ import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -38,6 +39,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	private boolean gameOver; // is the game over?
 	private int shotsFired; // the number of shots the user has fired
 	private double totalElapsedTime; // the number of seconds elapsed
+	private int totalScore;
 
 	private Line[] target = new Line[NUM_TARGET_LINE]; // start and end points
 														// of the target
@@ -191,7 +193,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		cannonballFired = false; // the cannonball is not on the screen
 		shotsFired = 0; // set the initial number of shots fired
 		totalElapsedTime = 0.0; // set the time elapsed to zero
-
+		totalScore = 0;
 		// blocker.start.set(blockerDistance, blockerBeginning);
 		// blocker.end.set(blockerDistance, blockerEnd);
 
@@ -205,9 +207,9 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		pad.end.set(padDistance, padEnd);
 
 		// configure instance variables related to the ball
-		cannonball.x = padDistance + 20; // align x-coordinate with
+		cannonball.x = pad.start.x + 20; // align x-coordinate with
 													// cannon
-		cannonball.y = ( padBeginning + padEnd) / 2; // centers ball
+		cannonball.y = ( pad.start.y + pad.end.y) / 2; // centers ball
 															// vertically
 
 		if (gameOver) {
@@ -272,7 +274,8 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						hitStates[i][section] = true; // section was hit
 						cannonballVelocityX *= -1; // reverse the cannonball's x
 													// direction
-
+						totalScore += 100;
+						Log.d("value of  score:", Integer.toString(totalScore));
 						// play target hit sound
 						soundPool.play(soundMap.get(TARGET_SOUND_ID), 1, 1, 1, 0,
 								1f);
@@ -297,18 +300,23 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	// fires a cannonball
 	public void fireCannonball(MotionEvent event) {
 
+		cannonball.x = pad.start.x + 20; 
+		cannonball.y = (pad.start.y + pad.end.y) / 2; 
+		
 		if (cannonballFired)
 			return;
 
 		cannonballFired = true;
 
 		double angle = alignCannon(event); // get the cannon barrel's angle
+		
+		shotsFired++;
 
 		// get the x component of the total velocity
 		cannonballVelocityX = (int) (cannonballSpeed * Math.sin(angle));
 
 		// get the y component of the total velocity
-		cannonballVelocityY = (int) (cannonballSpeed * Math.cos(angle));
+		cannonballVelocityY = (int) (-cannonballSpeed * Math.cos(angle));
 
 		// play cannon fired sound
 		soundPool.play(soundMap.get(CANNON_SOUND_ID), 1, 1, 1, 0, 1f);
@@ -322,21 +330,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		// compute the touch's distance from center of the screen
 		// on the y-axis
 		double centerMinusY = (screenHeight / 2 - touchPoint.y);
-
-		// compute the touch's distance from center of the screen
-		// on the x-axis
-		double centerMinusX = (screenWidth / 2 - touchPoint.x);
-
-		double angle1 = 0;
-
-		// calculate the angle the barrel makes with the horizontal
-		if (centerMinusX != 0) // prevent division by 0
-			angle1 = Math.atan((double) (padDistance - touchPoint.y)
-					/ centerMinusX);
-
-		// if the touch is on the lower half of the screen
-		if (touchPoint.x > screenWidth / 2)
-			angle1 += Math.PI; // adjust the angle
 
 		double angle = 0; // initialize angle to 0
 
@@ -430,7 +423,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
 		// display number of shots fired and total time elapsed
 		dialogBuilder.setMessage(getResources().getString(
-				R.string.results_format, shotsFired, totalElapsedTime));
+				R.string.results_format, shotsFired, totalScore));
 		dialogBuilder.setPositiveButton(R.string.reset_game,
 				new DialogInterface.OnClickListener() {
 					// called when "Reset Game" Button is pressed
@@ -441,7 +434,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 					} // end method onClick
 				} // end anonymous inner class
 				); // end call to setPositiveButton
-		dialogBuilder.setPositiveButton(R.string.next_level,
+		dialogBuilder.setNegativeButton(R.string.next_level,
 				new DialogInterface.OnClickListener() {
 			// called when "Reset Game" Button is pressed
 			@Override
@@ -545,6 +538,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						long currentTime = System.currentTimeMillis();
 						double elapsedTimeMS = currentTime - previousFrameTime;
 						totalElapsedTime += elapsedTimeMS / 1000.00;
+						totalScore = totalScore;
 						drawGameElements(canvas); // draw
 						previousFrameTime = currentTime; // update previous time
 					} // end synchronized block

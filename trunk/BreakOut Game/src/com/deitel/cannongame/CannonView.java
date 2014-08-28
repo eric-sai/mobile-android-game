@@ -23,6 +23,7 @@ import android.view.View;
 
 public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	private CannonThread cannonThread; // controls the game loop
+	private CollisionDectThread coldThread;
 	//private CollisionDectThread collisionDectThread;
 	private Activity activity; // to display Game Over dialog in GUI thread
 	private boolean dialogIsDisplayed = false;
@@ -212,8 +213,10 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		if (gameOver) {
 			gameOver = false; // the game is not over
 			cannonThread = new CannonThread(getHolder());
+			coldThread = new CollisionDectThread();
 			//collisionDectThread = new CollisionDectThread();
 			cannonThread.start();
+			coldThread.start();
 			//collisionDectThread.start();
 		} // end if
 	} // end method newGame
@@ -280,6 +283,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			
 			if (targetPiecesHit == TARGET_PIECES * NUM_TARGET_LINE) {
 				cannonThread.setRunning(false);
+				coldThread.setRunning(false);
 				showGameOverDialog(R.string.win); // show winning dialog
 				gameOver = true; // the game is over
 			}
@@ -372,6 +376,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 				backgroundPaint);
 
 		// display time remaining
+		textPaint.setColor(Color.BLUE);
 		canvas.drawText(
 				getResources().getString(R.string.time_used_format,
 						totalElapsedTime), 30, 50, textPaint);
@@ -459,6 +464,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	public void stopGame() {
 		if (cannonThread != null)
 			cannonThread.setRunning(false);
+			coldThread.setRunning(false);
 	} // end method stopGame
 
 	// releases resources; called by CannonGame's onDestroy method
@@ -478,10 +484,13 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	public void surfaceCreated(SurfaceHolder holder) {
 		if (!dialogIsDisplayed) {
 			cannonThread = new CannonThread(holder);
+			coldThread = new CollisionDectThread();
 			//collisionDectThread = new CollisionDectThread();
 			cannonThread.setRunning(true);
+			coldThread.setRunning(true);
 			//collisionDectThread.setRunning(true);
 			cannonThread.start(); // start the game loop thread
+			coldThread.start();
 			//collisionDectThread.start();
 		} // end if
 	} // end method surfaceCreated
@@ -492,10 +501,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		// ensure that thread terminates properly
 		boolean retry = true;
 		cannonThread.setRunning(false);
+		coldThread.setRunning(false);
 
 		while (retry) {
 			try {
 				cannonThread.join();
+				coldThread.join();
 				retry = false;
 			} // end try
 			catch (InterruptedException e) {
@@ -534,7 +545,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						long currentTime = System.currentTimeMillis();
 						double elapsedTimeMS = currentTime - previousFrameTime;
 						totalElapsedTime += elapsedTimeMS / 1000.00;
-						updatePositions(elapsedTimeMS); // update game state
 						drawGameElements(canvas); // draw
 						previousFrameTime = currentTime; // update previous time
 					} // end synchronized block
@@ -543,20 +553,20 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 					if (canvas != null)
 						surfaceHolder.unlockCanvasAndPost(canvas);
 				} // end finally
-					try {
-						Thread.sleep(1);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 			} // end while
 		} // end method run
 	} // end nested class CannonThread
-	/*
+	
 	private class CollisionDectThread extends Thread{
 		
-		private boolean threadIsRunning;
+		private boolean threadIsRunning = true;
 		public CollisionDectThread(){
 			
 		}
@@ -566,14 +576,24 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 		
 		public void run(){
+			long previousFrameTime = System.currentTimeMillis();
 			while(threadIsRunning){
 				try{
-					;
+				long currentTime = System.currentTimeMillis();
+				double elapsedTimeMS = currentTime - previousFrameTime;
+				updatePositions(elapsedTimeMS); // update game state
+				previousFrameTime = currentTime;
 				}
 				finally{}
+				try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
-	}*/
+	}
 } // end class CannonView
 
 /*********************************************************************************

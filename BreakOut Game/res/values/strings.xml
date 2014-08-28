@@ -15,6 +15,6 @@
     <string name="login">Login</string>
     <string name="forgetpass">Forget passward</string>
     <string name="regist">Regist</string>
-    <string name="score">totalScore: </string>
+    <string name="score">totalScore: %1$d</string>
 
 </resources>

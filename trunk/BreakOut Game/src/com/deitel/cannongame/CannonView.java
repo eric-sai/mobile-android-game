@@ -277,12 +277,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 				}
 			}
 
-			if (targetPiecesHit == TARGET_PIECES * NUM_TARGET_LINE) {
-				cannonThread.setRunning(false);
-				coldThread.setRunning(false);
-				showGameOverDialog(R.string.win); // show winning dialog
-				gameOver = true; // the game is over
-			}
+
 			// update cannonball position
 			cannonball.x += interval * cannonballVelocityX;
 			cannonball.y += interval * cannonballVelocityY;
@@ -362,8 +357,8 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		// display time remaining
 		textPaint.setColor(Color.BLUE);
 		canvas.drawText(
-				getResources().getString(R.string.time_used_format,
-						totalElapsedTime), 30, 50, textPaint);
+				getResources().getString(R.string.score,
+						totalScore), 30, 50, textPaint);
 
 		// draw the cannon ball
 		canvas.drawCircle(cannonball.x, cannonball.y, cannonballRadius,
@@ -531,6 +526,14 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						double elapsedTimeMS = currentTime - previousFrameTime;
 						totalElapsedTime += elapsedTimeMS / 1000.00;
 						drawGameElements(canvas); // draw
+						
+						// check if game over.
+						if (targetPiecesHit == TARGET_PIECES * NUM_TARGET_LINE) {
+							cannonThread.setRunning(false);
+							coldThread.setRunning(false);
+							showGameOverDialog(R.string.win); // show winning dialog
+							gameOver = true; // the game is over
+						}
 						previousFrameTime = currentTime; // update previous time
 					} // end synchronized block
 				} // end try

@@ -2,8 +2,14 @@
 // Displays the Cannon Game
 package com.deitel.cannongame;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.http.util.EncodingUtils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -177,7 +183,10 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			for (int j = 0; j < TARGET_PIECES; j++)
 				hitStates[i][j] = false;
 		}
-
+		
+		writeFiles("test.txt","this is a test!");
+		String result = readFiles("test.txt");
+		Log.d("Read test.txt result:", result);
 		targetPiecesHit = 0; // no target pieces have been hit
 		cannonballFired = false; // the cannonball is not on the screen
 		shotsFired = 0; // set the initial number of shots fired
@@ -272,6 +281,43 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
 		} // end if
 	} // end method updatePositions
+	
+	public void writeFiles(String name, String file) {
+		// Log.d("log", "writeFiles");
+		try {
+			FileOutputStream fos = this.getContext().openFileOutput(name,
+					Context.MODE_PRIVATE);
+			fos.write(file.getBytes());
+			Log.d(name, "created");
+			//Log.d("log", new String(file.getBytes()));
+			fos.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public String readFiles(String filename){
+		String res ="";
+		try{
+			Log.d(filename,"reading");
+			FileInputStream fin = this.getContext().openFileInput(filename);
+			int length = fin.available();
+			byte[] buffer = new byte[length];
+			fin.read(buffer);
+			res = EncodingUtils.getString(buffer, "UTF-8");
+			fin.close();
+		}
+		catch(Exception e){
+			Log.e("FileNotFoundException", "Couldn't find or open policy file");
+			//e.printStackTrace();
+		}
+		return res;
+	}
 
 	// fires a cannonball
 	public void fireCannonball(MotionEvent event) {

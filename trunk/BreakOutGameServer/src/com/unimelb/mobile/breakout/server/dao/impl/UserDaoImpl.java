@@ -50,4 +50,18 @@ public class UserDaoImpl implements IUserDao {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.unimelb.mobile.breakout.server.dao.IUserDao#register(com.unimelb.mobile.breakout.server.po.User)
+	 */
+	@Override
+	public int register(User user) {
+		String username = user.getUsername();
+		String password = user.getPassword();
+		int score = user.getScore();
+		String strSQL = "INSERT INTO `user_info` (`uid`,`username`,`password`,`score`) VALUES (null,?,?,?)";
+		int result  = this.dbconn.execOther(strSQL,new Object[]{password,username,score});
+		this.dbconn.closeConn();
+		return result;
+	}
+
 }

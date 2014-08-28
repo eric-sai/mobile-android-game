@@ -25,7 +25,7 @@ import android.view.View;
 public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	private CannonThread cannonThread; // controls the game loop
 	private CollisionDectThread coldThread;
-	//private CollisionDectThread collisionDectThread;
+	// private CollisionDectThread collisionDectThread;
 	private Activity activity; // to display Game Over dialog in GUI thread
 	private boolean dialogIsDisplayed = false;
 
@@ -39,17 +39,13 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	private boolean gameOver; // is the game over?
 	private int shotsFired; // the number of shots the user has fired
 	private double totalElapsedTime; // the number of seconds elapsed
-	private int totalScore;
+	public int totalScore;
 
-	private Line[] target = new Line[NUM_TARGET_LINE]; // start and end points
-														// of the target
-	private int[] targetDistance = new int[NUM_TARGET_LINE]; // target distance
-																// from top
-	private int[] targetBeginning = new int[NUM_TARGET_LINE]; // target distance
-																// from left
+	private Line[] target = new Line[NUM_TARGET_LINE];
+	private int[] targetDistance = new int[NUM_TARGET_LINE];
+	private int[] targetBeginning = new int[NUM_TARGET_LINE];
 	private double pieceLength; // length of a target piece
-	private int[] targetEnd = new int[NUM_TARGET_LINE]; // target bottom's
-														// distance from left
+	private int[] targetEnd = new int[NUM_TARGET_LINE];
 
 	// variables for the padder
 	private Line pad;
@@ -60,13 +56,8 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	private float padVelocity;
 
 	private int lineWidth; // width of the target and blocker
-	private boolean[][] hitStates = new boolean[NUM_TARGET_LINE][TARGET_PIECES]; // is
-																					// each
-																					// target
-																					// piece
-																					// hit?
-	private int targetPiecesHit; // number of target pieces hit (out of
-									// NUJ_TARGET_LINE * TARGET_PIECES)
+	private boolean[][] hitStates = new boolean[NUM_TARGET_LINE][TARGET_PIECES];
+	private int targetPiecesHit;
 
 	// variables for the cannon and cannonball
 	private Point cannonball; // cannonball image's upper-left corner
@@ -153,7 +144,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			targetDistance[i] = w - ((2 * i) + 1) * lineWidth;
 			targetBeginning[i] = h / 8;
 			targetEnd[i] = h * 7 / 8;
-			target[i].start = new Point(targetDistance[i],targetBeginning[i]);
+			target[i].start = new Point(targetDistance[i], targetBeginning[i]);
 			target[i].end = new Point(targetDistance[i], targetEnd[i]);
 		}
 
@@ -165,8 +156,8 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		padLen = h / 8;
 		padEnd = padBeginning + padLen;
 		padVelocity = 0;
-		pad.start = new Point(padDistance,padBeginning);
-		pad.end = new Point(padDistance,padEnd);
+		pad.start = new Point(padDistance, padBeginning);
+		pad.end = new Point(padDistance, padEnd);
 
 		// configure Paint objects for drawing game elements
 		textPaint.setTextSize(w / 20); // text size 1/20 of screen width
@@ -208,18 +199,18 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
 		// configure instance variables related to the ball
 		cannonball.x = pad.start.x + 20; // align x-coordinate with
-													// cannon
-		cannonball.y = ( pad.start.y + pad.end.y) / 2; // centers ball
-															// vertically
+											// cannon
+		cannonball.y = (pad.start.y + pad.end.y) / 2; // centers ball
+														// vertically
 
 		if (gameOver) {
 			gameOver = false; // the game is not over
 			cannonThread = new CannonThread(getHolder());
 			coldThread = new CollisionDectThread();
-			//collisionDectThread = new CollisionDectThread();
+			// collisionDectThread = new CollisionDectThread();
 			cannonThread.start();
 			coldThread.start();
-			//collisionDectThread.start();
+			// collisionDectThread.start();
 		} // end if
 	} // end method newGame
 
@@ -235,9 +226,11 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 					&& cannonball.y - cannonballRadius <= pad.end.y
 					&& cannonball.x + cannonballRadius >= padDistance
 					&& cannonball.x - cannonballRadius <= padDistance) {
-				
+
 				cannonballVelocityX *= -1; // reverse cannonball's X direction
-				soundPool.play(soundMap.get(BLOCKER_SOUND_ID), 1, 1, 1, 0, 1f); // play pad sound
+				soundPool.play(soundMap.get(BLOCKER_SOUND_ID), 1, 1, 1, 0, 1f); // play
+																				// pad
+																				// sound
 			} // end if
 
 			// check for collisions with left or right walls
@@ -277,13 +270,13 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						totalScore += 100;
 						Log.d("value of  score:", Integer.toString(totalScore));
 						// play target hit sound
-						soundPool.play(soundMap.get(TARGET_SOUND_ID), 1, 1, 1, 0,
-								1f);
+						soundPool.play(soundMap.get(TARGET_SOUND_ID), 1, 1, 1,
+								0, 1f);
 						targetPiecesHit++;
 					}
 				}
 			}
-			
+
 			if (targetPiecesHit == TARGET_PIECES * NUM_TARGET_LINE) {
 				cannonThread.setRunning(false);
 				coldThread.setRunning(false);
@@ -293,24 +286,22 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			// update cannonball position
 			cannonball.x += interval * cannonballVelocityX;
 			cannonball.y += interval * cannonballVelocityY;
-			
+
 		} // end if
 	} // end method updatePositions
 
 	// fires a cannonball
 	public void fireCannonball(MotionEvent event) {
 
-		cannonball.x = pad.start.x + 20; 
-		cannonball.y = (pad.start.y + pad.end.y) / 2; 
-		
+		cannonball.x = pad.start.x + 20;
+		cannonball.y = (pad.start.y + pad.end.y) / 2;
+
 		if (cannonballFired)
 			return;
 
 		cannonballFired = true;
 
 		double angle = alignCannon(event); // get the cannon barrel's angle
-		
-		shotsFired++;
 
 		// get the x component of the total velocity
 		cannonballVelocityX = (int) (cannonballSpeed * Math.sin(angle));
@@ -423,7 +414,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
 		// display number of shots fired and total time elapsed
 		dialogBuilder.setMessage(getResources().getString(
-				R.string.results_format, shotsFired, totalScore));
+				R.string.results_format, totalScore));
 		dialogBuilder.setPositiveButton(R.string.reset_game,
 				new DialogInterface.OnClickListener() {
 					// called when "Reset Game" Button is pressed
@@ -436,13 +427,14 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 				); // end call to setPositiveButton
 		dialogBuilder.setNegativeButton(R.string.next_level,
 				new DialogInterface.OnClickListener() {
-			// called when "Reset Game" Button is pressed
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialogIsDisplayed = false;
-				newGame(); }// set up and start a new game
-			} // end method onClick
-			);
+					// called when "Reset Game" Button is pressed
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						dialogIsDisplayed = false;
+						newGame();
+					}// set up and start a new game
+				} // end method onClick
+				);
 
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
@@ -457,7 +449,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	public void stopGame() {
 		if (cannonThread != null)
 			cannonThread.setRunning(false);
-			coldThread.setRunning(false);
+		coldThread.setRunning(false);
 	} // end method stopGame
 
 	// releases resources; called by CannonGame's onDestroy method
@@ -478,13 +470,13 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		if (!dialogIsDisplayed) {
 			cannonThread = new CannonThread(holder);
 			coldThread = new CollisionDectThread();
-			//collisionDectThread = new CollisionDectThread();
+			// collisionDectThread = new CollisionDectThread();
 			cannonThread.setRunning(true);
 			coldThread.setRunning(true);
-			//collisionDectThread.setRunning(true);
+			// collisionDectThread.setRunning(true);
 			cannonThread.start(); // start the game loop thread
 			coldThread.start();
-			//collisionDectThread.start();
+			// collisionDectThread.start();
 		} // end if
 	} // end method surfaceCreated
 
@@ -538,7 +530,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						long currentTime = System.currentTimeMillis();
 						double elapsedTimeMS = currentTime - previousFrameTime;
 						totalElapsedTime += elapsedTimeMS / 1000.00;
-						totalScore = totalScore;
 						drawGameElements(canvas); // draw
 						previousFrameTime = currentTime; // update previous time
 					} // end synchronized block
@@ -557,28 +548,29 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			} // end while
 		} // end method run
 	} // end nested class CannonThread
-	
-	private class CollisionDectThread extends Thread{
-		
+
+	private class CollisionDectThread extends Thread {
+
 		private boolean threadIsRunning = true;
-		public CollisionDectThread(){
-			
+
+		public CollisionDectThread() {
+
 		}
-		
-		public void setRunning(boolean running){
+
+		public void setRunning(boolean running) {
 			threadIsRunning = running;
 		}
-		
-		public void run(){
+
+		public void run() {
 			long previousFrameTime = System.currentTimeMillis();
-			while(threadIsRunning){
-				try{
-				long currentTime = System.currentTimeMillis();
-				double elapsedTimeMS = currentTime - previousFrameTime;
-				updatePositions(elapsedTimeMS); // update game state
-				previousFrameTime = currentTime;
+			while (threadIsRunning) {
+				try {
+					long currentTime = System.currentTimeMillis();
+					double elapsedTimeMS = currentTime - previousFrameTime;
+					updatePositions(elapsedTimeMS); // update game state
+					previousFrameTime = currentTime;
+				} finally {
 				}
-				finally{}
 				try {
 					Thread.sleep(1);
 				} catch (InterruptedException e) {

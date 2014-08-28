@@ -115,6 +115,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 				soundPool.load(context, R.raw.cannon_fire, 1));
 		soundMap.put(BLOCKER_SOUND_ID,
 				soundPool.load(context, R.raw.blocker_hit, 1));
+		totalScore = 0;
 
 		// construct Paints for drawing text, cannonball, cannon,
 		// blocker and target; these are configured in method onSizeChanged
@@ -178,16 +179,9 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		targetPiecesHit = 0; // no target pieces have been hit
-
-		// blockerVelocity = initialBlockerVelocity; // set initial velocity
-
 		cannonballFired = false; // the cannonball is not on the screen
 		shotsFired = 0; // set the initial number of shots fired
 		totalElapsedTime = 0.0; // set the time elapsed to zero
-		totalScore = 0;
-		// blocker.start.set(blockerDistance, blockerBeginning);
-		// blocker.end.set(blockerDistance, blockerEnd);
-
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
 			target[i].start.set(targetDistance[i], targetBeginning[i]);
 			target[i].end.set(targetDistance[i], targetEnd[i]);
@@ -200,9 +194,8 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		// configure instance variables related to the ball
 		cannonball.x = pad.start.x + 20; // align x-coordinate with
 											// cannon
-		cannonball.y = (pad.start.y + pad.end.y) / 2; // centers ball
-														// vertically
-
+		cannonball.y = (pad.start.y + pad.end.y) / 2; 
+		
 		if (gameOver) {
 			gameOver = false; // the game is not over
 			cannonThread = new CannonThread(getHolder());
@@ -220,7 +213,9 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
 		if (cannonballFired) // if there is currently a shot fired
 		{
-
+			// update cannonball position
+			cannonball.x += interval * cannonballVelocityX;
+			cannonball.y += interval * cannonballVelocityY;
 			// check for collision with pad
 			if (cannonball.y + cannonballRadius >= pad.start.y
 					&& cannonball.y - cannonballRadius <= pad.end.y
@@ -228,28 +223,26 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 					&& cannonball.x - cannonballRadius <= padDistance) {
 
 				cannonballVelocityX *= -1; // reverse cannonball's X direction
-				soundPool.play(soundMap.get(BLOCKER_SOUND_ID), 1, 1, 1, 0, 1f); // play
-																				// pad
-																				// sound
+				soundPool.play(soundMap.get(BLOCKER_SOUND_ID), 1, 1, 1, 0, 1f); 
 			} // end if
 
 			// check for collisions with left or right walls
-			if (cannonball.x + cannonballRadius >= screenWidth
-					|| cannonball.x - cannonballRadius <= 0) {
+			if (cannonball.x + cannonballRadius >= screenWidth) {
 				cannonballVelocityX *= -1; // reverse cannonball's X direction
 			}
-
-			// check for collisions with top wall
-			if (cannonball.y - cannonballRadius <= 0)
-				cannonballVelocityY *= -1; // rever cannonball's Y direction
-
-			if (cannonball.y + cannonballRadius >= screenHeight) {
-
+			if (cannonball.x - cannonballRadius <= 0){
 				// the ball hits the bottom, game over.
+				cannonThread.setRunning(false);
+				coldThread.setRunning(false);
+				showGameOverDialog(R.string.lose); 
+				gameOver = true; // the game is over
+				//cannonballVelocityX *= -1; 
+			}
+			
+			// collistions with top or bottom
+			if (cannonball.y + cannonballRadius >= screenHeight
+					|| cannonball.y - cannonballRadius <= 0 ) {				
 				cannonballVelocityY *= -1;
-				// cannonThread.setRunning(false);
-				// showGameOverDialog(R.string.lose); // show winning dialog
-				// gameOver = true; // the game is over
 			}
 
 			// check for collisions with targets
@@ -276,11 +269,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 					}
 				}
 			}
-
-
-			// update cannonball position
-			cannonball.x += interval * cannonballVelocityX;
-			cannonball.y += interval * cannonballVelocityY;
 
 		} // end if
 	} // end method updatePositions
@@ -406,30 +394,49 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 				getContext());
 		dialogBuilder.setTitle(getResources().getString(messageId));
 		dialogBuilder.setCancelable(false);
+		if (messageId == R.string.lose){
+			// display number of shots fired and total time elapsed
+			dialogBuilder.setMessage(getResources().getString(
+					R.string.results_format, totalScore));
+			dialogBuilder.setPositiveButton(R.string.reset_game,
+					new DialogInterface.OnClickListener() {
+						// called when "Reset Game" Button is pressed
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialogIsDisplayed = false;
+							totalScore = 0;
+							newGame(); // set up and start a new game
+						} // end method onClick
+					} // end anonymous inner class
+					); // end call to setPositiveButton
+		}
 
-		// display number of shots fired and total time elapsed
-		dialogBuilder.setMessage(getResources().getString(
-				R.string.results_format, totalScore));
-		dialogBuilder.setPositiveButton(R.string.reset_game,
-				new DialogInterface.OnClickListener() {
-					// called when "Reset Game" Button is pressed
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialogIsDisplayed = false;
-						newGame(); // set up and start a new game
+		else{
+			// display number of shots fired and total time elapsed
+			dialogBuilder.setMessage(getResources().getString(
+					R.string.results_format, totalScore));
+			dialogBuilder.setPositiveButton(R.string.reset_game,
+					new DialogInterface.OnClickListener() {
+						// called when "Reset Game" Button is pressed
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialogIsDisplayed = false;
+							newGame(); // set up and start a new game
+						} // end method onClick
+					} // end anonymous inner class
+					); // end call to setPositiveButton
+			dialogBuilder.setNegativeButton(R.string.next_level,
+					new DialogInterface.OnClickListener() {
+						// called when "Reset Game" Button is pressed
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialogIsDisplayed = false;
+							newGame();
+						}// set up and start a new game
 					} // end method onClick
-				} // end anonymous inner class
-				); // end call to setPositiveButton
-		dialogBuilder.setNegativeButton(R.string.next_level,
-				new DialogInterface.OnClickListener() {
-					// called when "Reset Game" Button is pressed
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialogIsDisplayed = false;
-						newGame();
-					}// set up and start a new game
-				} // end method onClick
-				);
+					);
+		}
+
 
 		activity.runOnUiThread(new Runnable() {
 			public void run() {

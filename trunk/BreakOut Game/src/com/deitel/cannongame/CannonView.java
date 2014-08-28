@@ -392,6 +392,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		// create a dialog displaying the given String
 		final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
 				getContext());
+		
 		dialogBuilder.setTitle(getResources().getString(messageId));
 		dialogBuilder.setCancelable(false);
 		if (messageId == R.string.lose){
@@ -436,8 +437,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 					} // end method onClick
 					);
 		}
-
-
 		activity.runOnUiThread(new Runnable() {
 			public void run() {
 				dialogIsDisplayed = true;

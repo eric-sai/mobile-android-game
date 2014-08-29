@@ -39,14 +39,14 @@ public class Login extends Activity {
 	protected static final int IS_NET_ERROR = 2;
 	public EditText username, password;
 	public Button Btn_login, Btn_regist, Btn_forgetpwd;
-	public String url_login = "http://10.9.203.117:8080/BreakOutGameServer/LoginServlet";
+	public String url_login = "http://10.9.184.221:8080/BreakOutGameServer/LoginServlet";
 	public String out = null;
 	// public byte[] bytes;
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(android.os.Message msg) {
 			String errorMsg = "";
-			Log.d("what", "what="+msg.what);
+			Log.d("what", "what=" + msg.what);
 			switch (msg.what) {
 			case IS_LOGIN_ERROR:
 				// out = msg.obj.toString();
@@ -58,9 +58,8 @@ public class Login extends Activity {
 				break;
 
 			}
-			Log.d("errorMsg", "error="+errorMsg);
-			Toast toast = Toast.makeText(getApplicationContext(), errorMsg,
-					Toast.LENGTH_LONG);
+			Log.d("errorMsg", "error=" + errorMsg);
+			Toast toast = Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_LONG);
 			toast.show();
 
 		};
@@ -108,49 +107,39 @@ public class Login extends Activity {
 							// Looper.prepare();
 							super.run();
 							try {
-								HttpEntity requestHttpEntity = new UrlEncodedFormEntity(
-										params, HTTP.UTF_8);
+								HttpEntity requestHttpEntity = new UrlEncodedFormEntity(params, HTTP.UTF_8);
 								HttpPost httpPost = new HttpPost(url_login);
 								httpPost.setEntity(requestHttpEntity);
 								HttpClient httpClient = new DefaultHttpClient();
-								HttpResponse httpResponse = httpClient
-										.execute(httpPost);
-								if (httpResponse.getStatusLine()
-										.getStatusCode() == 200) {
-									HttpEntity httpEntity = httpResponse
-											.getEntity();
-									// if(httpEntity != null){
-									// String user_info =
-									// EntityUtils.toString(httpEntity);
+								HttpResponse httpResponse = httpClient.execute(httpPost);
+								if (httpResponse.getStatusLine().getStatusCode() == 200) {
+									HttpEntity httpEntity = httpResponse.getEntity();
 
-									int id;
-									String username = "";
-									int score;
-									byte[] bytes = EntityUtils
-											.toByteArray(httpEntity);
-									Log.d("bytes", new String(bytes));
-
-									ObjectInputStream ois = new ObjectInputStream(
-											new ByteArrayInputStream(bytes));
+									/*
+									 * int id; String username = ""; int score;
+									 */
+									byte[] bytes = EntityUtils.toByteArray(httpEntity);
+									ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
 									User user = new User();
 									user = (User) ois.readObject();
-									id = user.getUid();
-									username = user.getUsername();
-									score = user.getScore();
 									/*
-									 * Log.d("log", user.getUsername());
-									 * Log.d("log", user.getPassword());
-									 * Log.d("log", user.getScore()+"");
+									 * id = user.getUid(); username =
+									 * user.getUsername(); score =
+									 * user.getScore();
 									 */
 									ois.close();
-									Log.d("id", "id="+id);
-									if (id != 0) {
-										Intent toCannonGame = new Intent(
-												Login.this, CannonGame.class);
-										toCannonGame.putExtra("ID", id);
-										toCannonGame.putExtra("username",
-												username);
-										toCannonGame.putExtra("score", score);
+									if (user.getUid() != 0) {
+										Intent toCannonGame = new Intent(Login.this, CannonGame.class);
+										/*
+										 * toCannonGame.putExtra("ID", id);
+										 * toCannonGame.putExtra("username",
+										 * username);
+										 * toCannonGame.putExtra("score",
+										 * score);
+										 */
+										Bundle bundle = new Bundle();
+										bundle.putSerializable("user", user);
+										toCannonGame.putExtras(bundle);
 										startActivity(toCannonGame);
 										Login.this.finish();
 									} else {
@@ -183,13 +172,5 @@ public class Login extends Activity {
 			}
 		});
 
-		Btn_regist.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-
-			}
-		});
 	}
 }

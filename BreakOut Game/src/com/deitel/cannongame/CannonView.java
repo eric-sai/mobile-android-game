@@ -238,20 +238,27 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			// check for collisions with left or right walls
 			if (cannonball.x + cannonballRadius >= screenWidth) {
 				cannonballVelocityX *= -1; // reverse cannonball's X direction
+				cannonball.x = screenWidth - cannonballRadius;
 			}
 			if (cannonball.x - cannonballRadius <= 0){
 				// the ball hits the bottom, game over.
-				cannonThread.setRunning(false);
-				coldThread.setRunning(false);
-				showGameOverDialog(R.string.lose); 
-				gameOver = true; // the game is over
-				//cannonballVelocityX *= -1; 
+				//cannonThread.setRunning(false);
+				//coldThread.setRunning(false);
+				//showGameOverDialog(R.string.lose); 
+				//gameOver = true; // the game is over
+				cannonballVelocityX *= -1; 
+				cannonball.x = cannonballRadius;
 			}
 			
 			// collistions with top or bottom
-			if (cannonball.y + cannonballRadius >= screenHeight
-					|| cannonball.y - cannonballRadius <= 0 ) {				
+			if (cannonball.y + cannonballRadius >= screenHeight){
+				
 				cannonballVelocityY *= -1;
+				cannonball.y = screenHeight - cannonballRadius;
+			}
+			if(cannonball.y - cannonballRadius <= 0 ) {				
+				cannonballVelocityY *= -1;
+				cannonball.y = cannonballRadius;
 			}
 
 			// check for collisions with targets
@@ -468,6 +475,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialogIsDisplayed = false;
+							totalScore = 0;
 							newGame(); // set up and start a new game
 						} // end method onClick
 					} // end anonymous inner class

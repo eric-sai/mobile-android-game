@@ -64,6 +64,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	private int lineWidth; // width of the target and blocker
 	private boolean[][] hitStates = new boolean[NUM_TARGET_LINE][TARGET_PIECES];
 	private int targetPiecesHit;
+	private int sumOfBricks;
 
 	// variables for the cannon and cannonball
 	private Point cannonball; // cannonball image's upper-left corner
@@ -131,6 +132,23 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		targetPaint = new Paint(); // Paint for drawing the target
 		backgroundPaint = new Paint(); // Paint for drawing the target
 	} // end CannonView constructor
+	
+	public void logGameSettings(int level){
+		String filename = "level" + Integer.toString(level);
+		
+		String gameSetting
+			= Integer.toString(padLen) + ","
+			+ Integer.toString(cannonballSpeed) +","
+			+ Integer.toString(sumOfBricks) + ",";
+		
+		writeFiles(filename,gameSetting);
+	}
+	
+	public String readGameSettings(String filename){
+		String gameSetting = readFiles(filename);
+		Log.d("ganem setting:", gameSetting);
+		return gameSetting;
+	}
 
 	// called by surfaceChanged when the size of the SurfaceView changes,
 	// such as when it's first added to the View hierarchy
@@ -182,11 +200,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
 			for (int j = 0; j < TARGET_PIECES; j++)
 				hitStates[i][j] = false;
+				sumOfBricks++;
 		}
+		logGameSettings(1);
+		String level = "level1";
 		
-		writeFiles("test.txt","this is a test!");
-		String result = readFiles("test.txt");
-		Log.d("Read test.txt result:", result);
+		readGameSettings(level);
 		targetPiecesHit = 0; // no target pieces have been hit
 		cannonballFired = false; // the cannonball is not on the screen
 		shotsFired = 0; // set the initial number of shots fired

@@ -223,11 +223,13 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		// set every element of hitStates to false--restores target pieces
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
 			for (int j = 0; j < TARGET_PIECES; j++){
-				if(settings[i+2].charAt(j)=='1')
+				if(settings[i+2].charAt(j)=='1'){
 					hitStates[i][j] = false;
+					sumOfBricks++;
+				}
 				else
 					hitStates[i][j] = true;
-				sumOfBricks++;	
+					
 			}
 		}
 

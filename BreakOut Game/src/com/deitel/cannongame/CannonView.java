@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,9 +35,10 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	// private CollisionDectThread collisionDectThread;
 	private Activity activity; // to display Game Over dialog in GUI thread
 	private boolean dialogIsDisplayed = false;
+	public boolean downloaded = false;
 
 	// constants for game play
-	public static final int TARGET_PIECES = 7; // sections in the target
+	public static final int TARGET_PIECES = 10; // sections in the target
 	public static final int MISS_PENALTY = 2; // seconds deducted on a miss
 	public static final int HIT_REWARD = 3; // seconds added on a hit
 	public static final int NUM_TARGET_LINE = 2; // lines of targets
@@ -46,6 +48,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	private int shotsFired; // the number of shots the user has fired
 	private double totalElapsedTime; // the number of seconds elapsed
 	public int totalScore;
+	public int currtLevel;
 
 	private Line[] target = new Line[NUM_TARGET_LINE];
 	private int[] targetDistance = new int[NUM_TARGET_LINE];
@@ -145,8 +148,18 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 	
 	public String readGameSettings(String filename){
-		String gameSetting = readFiles(filename);
-		Log.d("ganem setting:", gameSetting);
+		String gameSetting = null;
+		try {
+			InputStream in = getResources().getAssets().open(filename);
+			int length = in.available();
+			byte[] buffer = new byte[length];
+			in.read(buffer);
+			gameSetting = EncodingUtils.getString(buffer,"UTF-8");
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return gameSetting;
 	}
 
@@ -158,12 +171,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
 		screenWidth = w; // store the width
 		screenHeight = h; // store the height
-
+		currtLevel = 1;
+		
+		// Fixed configurations of the game:
 		cannonballRadius = w / 120; // cannonball radius 1/36 screen width
-		cannonballSpeed = w * 2 / 1200; // cannonball speed multiplier
-
 		lineWidth = w / 24; // target and blocker 1/24 screen width
-
+		
 		// configure instance variables related to the target
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
 			targetDistance[i] = w - ((2 * i) + 1) * lineWidth;
@@ -172,17 +185,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			target[i].start = new Point(targetDistance[i], targetBeginning[i]);
 			target[i].end = new Point(targetDistance[i], targetEnd[i]);
 		}
-
 		pieceLength = (targetEnd[0] - targetBeginning[0]) / TARGET_PIECES;
-
+		
 		// configure instance variables related to the pad
 		padDistance = w / 8;
 		padBeginning = h / 2;
-		padLen = h / 8;
-		padEnd = padBeginning + padLen;
 		padVelocity = 0;
-		pad.start = new Point(padDistance, padBeginning);
-		pad.end = new Point(padDistance, padEnd);
 
 		// configure Paint objects for drawing game elements
 		textPaint.setTextSize(w / 20); // text size 1/20 of screen width
@@ -191,21 +199,32 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		targetPaint.setStrokeWidth(lineWidth); // set line thickness
 		backgroundPaint.setColor(Color.WHITE); // set background color
 
-		newGame(); // set up and start a new game
+		newGame("level"+Integer.toString(currtLevel)); // set up and start a new game
 	} // end method onSizeChanged
 
 	// reset all the screen elements and start a new game
-	public void newGame() {
+	public void newGame(String level) {
+		
+		// get game settings.
+		String gameSetting = readGameSettings(level);
+		Log.d("asset-level1:",gameSetting);	
+		String[] settings = gameSetting.split(",");
+		
+		padLen = Integer.parseInt(settings[0]);
+		cannonballSpeed = Integer.parseInt(settings[1]);
+		Log.d("pad len:",Integer.toString(padLen));
+		Log.d("ball speed:",Integer.toString(cannonballSpeed));
+		padEnd = padBeginning + padLen;
+		pad.start = new Point(padDistance, padBeginning);
+		pad.end = new Point(padDistance, padEnd);
+		
 		// set every element of hitStates to false--restores target pieces
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
 			for (int j = 0; j < TARGET_PIECES; j++)
 				hitStates[i][j] = false;
 				sumOfBricks++;
 		}
-		logGameSettings(1);
-		String level = "level1";
-		
-		readGameSettings(level);
+
 		targetPiecesHit = 0; // no target pieces have been hit
 		cannonballFired = false; // the cannonball is not on the screen
 		shotsFired = 0; // set the initial number of shots fired
@@ -220,8 +239,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		pad.end.set(padDistance, padEnd);
 
 		// configure instance variables related to the ball
-		cannonball.x = pad.start.x + 20; // align x-coordinate with
-											// cannon
+		cannonball.x = pad.start.x + 20; 
 		cannonball.y = (pad.start.y + pad.end.y) / 2; 
 		
 		if (gameOver) {
@@ -356,7 +374,9 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
 		cannonballFired = true;
 
-		double angle = alignCannon(event); // get the cannon barrel's angle
+		//double angle = alignCannon(event); // get the cannon barrel's angle
+		double angle = 2.43;
+		Log.d("angle:",Double.toString(angle));
 
 		// get the x component of the total velocity
 		cannonballVelocityX = (int) (cannonballSpeed * Math.sin(angle));
@@ -478,7 +498,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						public void onClick(DialogInterface dialog, int which) {
 							dialogIsDisplayed = false;
 							totalScore = 0;
-							newGame(); // set up and start a new game
+							newGame("level1"); // set up and start a new game
 						} // end method onClick
 					} // end anonymous inner class
 					); // end call to setPositiveButton
@@ -495,7 +515,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						public void onClick(DialogInterface dialog, int which) {
 							dialogIsDisplayed = false;
 							totalScore = 0;
-							newGame(); // set up and start a new game
+							newGame("level1"); // set up and start a new game
 						} // end method onClick
 					} // end anonymous inner class
 					); // end call to setPositiveButton
@@ -505,7 +525,11 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialogIsDisplayed = false;
-							newGame();
+							currtLevel++;
+							if(currtLevel > 2 && !downloaded){
+								currtLevel = 1;
+							}
+							newGame("level"+Integer.toString(currtLevel));
 						}// set up and start a new game
 					} // end method onClick
 					);

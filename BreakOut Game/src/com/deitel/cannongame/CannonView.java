@@ -217,12 +217,18 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		padEnd = padBeginning + padLen;
 		pad.start = new Point(padDistance, padBeginning);
 		pad.end = new Point(padDistance, padEnd);
+		Log.d("taget setting:",settings[2]);
 		
+		sumOfBricks = 0;
 		// set every element of hitStates to false--restores target pieces
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
-			for (int j = 0; j < TARGET_PIECES; j++)
-				hitStates[i][j] = false;
-				sumOfBricks++;
+			for (int j = 0; j < TARGET_PIECES; j++){
+				if(settings[i+2].charAt(j)=='1')
+					hitStates[i][j] = false;
+				else
+					hitStates[i][j] = true;
+				sumOfBricks++;	
+			}
 		}
 
 		targetPiecesHit = 0; // no target pieces have been hit
@@ -631,7 +637,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						drawGameElements(canvas); // draw
 						
 						// check if game over.
-						if (targetPiecesHit == TARGET_PIECES * NUM_TARGET_LINE) {
+						if (targetPiecesHit == sumOfBricks) {
 							cannonThread.setRunning(false);
 							coldThread.setRunning(false);
 							showGameOverDialog(R.string.win); // show winning dialog

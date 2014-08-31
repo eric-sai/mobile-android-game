@@ -5,53 +5,91 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/enterBut"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="102dp"
-        android:text="Breakout"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="25dp"
-        android:text="Welcome to the"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
 <!-- Added by JunHan 15/08/2014 -->
-    <Button
-        android:id="@+id/btnDownload"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/helpBut"
-        android:layout_alignBottom="@+id/helpBut"
-        android:layout_centerHorizontal="true"
-        android:text="Download" />
 
-    <Button
-        android:id="@+id/helpBut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/enterBut"
-        android:layout_alignBottom="@+id/enterBut"
-        android:layout_marginLeft="14dp"
-        android:layout_toRightOf="@+id/textView1"
-        android:text="Help" />
+      <TextView
+          android:id="@+id/textView1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignRight="@+id/btnDownload"
+          android:layout_below="@+id/textView2"
+          android:layout_marginTop="35dp"
+          android:text="Breakout"
+          android:textAppearance="?android:attr/textAppearanceLarge" />
+       
 
-    <Button
-        android:id="@+id/enterBut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="142dp"
-        android:layout_marginRight="16dp"
-        android:layout_toLeftOf="@+id/textView1"
-        android:text="Enter" />
+
+      <Button
+          android:id="@+id/topBut"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignLeft="@+id/localBut"
+          android:layout_alignRight="@+id/localBut"
+          android:layout_below="@+id/localBut"
+          android:text="top 10" />
+
+      <Button
+          android:id="@+id/localBut"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignLeft="@+id/textView1"
+          android:layout_below="@+id/enterBut"
+          android:text="local level" />
+
+      <Button
+          android:id="@+id/helpBut"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignLeft="@+id/topBut"
+          android:layout_alignRight="@+id/topBut"
+          android:layout_below="@+id/btnDownload"
+          android:text="Help" />
+
+       <Button
+           android:id="@+id/enterBut"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignLeft="@+id/textView1"
+           android:layout_alignRight="@+id/localBut"
+           android:layout_below="@+id/textView1"
+           android:text="start" />
+
+       <TextView
+           android:id="@+id/textView2"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignParentTop="true"
+           android:layout_centerHorizontal="true"
+           android:layout_marginTop="32dp"
+           android:text="Welcome to the"
+           android:textAppearance="?android:attr/textAppearanceLarge" />
+
+       <Button
+           android:id="@+id/exitBut"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignLeft="@+id/continueBut"
+           android:layout_alignParentBottom="true"
+           android:layout_alignRight="@+id/continueBut"
+           android:layout_marginBottom="23dp"
+           android:text="Exit" />
+
+       <Button
+           android:id="@+id/continueBut"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignLeft="@+id/helpBut"
+           android:layout_alignRight="@+id/topBut"
+           android:layout_below="@+id/helpBut"
+           android:text="Continue" />
+
+       <Button
+           android:id="@+id/btnDownload"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignLeft="@+id/textView2"
+           android:layout_below="@+id/topBut"
+           android:layout_marginLeft="18dp"
+           android:text="Download" />
 
 </RelativeLayout>

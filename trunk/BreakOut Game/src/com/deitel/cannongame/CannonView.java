@@ -65,6 +65,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	private float padVelocity;
 
 	private int lineWidth; // width of the target and blocker
+	private int linegap;
 	private boolean[][] hitStates = new boolean[NUM_TARGET_LINE][TARGET_PIECES];
 	private int targetPiecesHit;
 	private int sumOfBricks;
@@ -177,10 +178,11 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		// Fixed configurations of the game:
 		cannonballRadius = w / 120; // cannonball radius 1/36 screen width
 		lineWidth = h / 24; // target and blocker 1/24 screen width
+		linegap = lineWidth /2;
 		
 		// configure instance variables related to the target
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
-			targetDistance[i] = ((2 * i) + 1) * lineWidth;
+			targetDistance[i] = ((2 * i) + 1) * linegap;
 			targetBeginning[i] = w / 8;
 			targetEnd[i] = w * 7 / 8;
 			target[i].start = new Point(targetBeginning[i], targetDistance[i]);
@@ -197,7 +199,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		textPaint.setTextSize(w / 20); // text size 1/20 of screen width
 		textPaint.setAntiAlias(true); // smoothes the text
 		padPaint.setStrokeWidth(lineWidth / 2); // set line thickness
-		targetPaint.setStrokeWidth(lineWidth); // set line thickness
+		targetPaint.setStrokeWidth(lineWidth / 2); // set line thickness
 		backgroundPaint.setColor(Color.WHITE); // set background color
 
 		newGame("level"+Integer.toString(currtLevel)); // set up and start a new game

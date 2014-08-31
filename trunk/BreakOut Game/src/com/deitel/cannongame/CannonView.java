@@ -172,24 +172,25 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		screenWidth = w; // store the width
 		screenHeight = h; // store the height
 		currtLevel = 1;
-		
+		Log.d("width:",Integer.toString(w));
+		Log.d("height:",Integer.toString(h));
 		// Fixed configurations of the game:
 		cannonballRadius = w / 120; // cannonball radius 1/36 screen width
-		lineWidth = w / 24; // target and blocker 1/24 screen width
+		lineWidth = h / 24; // target and blocker 1/24 screen width
 		
 		// configure instance variables related to the target
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
-			targetDistance[i] = w - ((2 * i) + 1) * lineWidth;
-			targetBeginning[i] = h / 8;
-			targetEnd[i] = h * 7 / 8;
-			target[i].start = new Point(targetDistance[i], targetBeginning[i]);
-			target[i].end = new Point(targetDistance[i], targetEnd[i]);
+			targetDistance[i] = ((2 * i) + 1) * lineWidth;
+			targetBeginning[i] = w / 8;
+			targetEnd[i] = w * 7 / 8;
+			target[i].start = new Point(targetBeginning[i], targetDistance[i]);
+			target[i].end = new Point( targetEnd[i], targetDistance[i]);
 		}
 		pieceLength = (targetEnd[0] - targetBeginning[0]) / TARGET_PIECES;
 		
 		// configure instance variables related to the pad
-		padDistance = w / 8;
-		padBeginning = h / 2;
+		padDistance = h *7 / 8;
+		padBeginning = w / 2;
 		padVelocity = 0;
 
 		// configure Paint objects for drawing game elements
@@ -215,8 +216,9 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		Log.d("pad len:",Integer.toString(padLen));
 		Log.d("ball speed:",Integer.toString(cannonballSpeed));
 		padEnd = padBeginning + padLen;
-		pad.start = new Point(padDistance, padBeginning);
-		pad.end = new Point(padDistance, padEnd);
+		
+		pad.start = new Point(padBeginning, padDistance);
+		pad.end = new Point(padEnd, padDistance);
 		Log.d("taget setting:",settings[2]);
 		
 		sumOfBricks = 0;
@@ -238,17 +240,17 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		shotsFired = 0; // set the initial number of shots fired
 		totalElapsedTime = 0.0; // set the time elapsed to zero
 		for (int i = 0; i < NUM_TARGET_LINE; i++) {
-			target[i].start.set(targetDistance[i], targetBeginning[i]);
-			target[i].end.set(targetDistance[i], targetEnd[i]);
+			target[i].start.set(targetBeginning[i], targetDistance[i]);
+			target[i].end.set(targetEnd[i], targetDistance[i]);
 		}
 
 		// set the pad
-		pad.start.set(padDistance, padBeginning);
-		pad.end.set(padDistance, padEnd);
+		pad.start.set(padBeginning, padDistance);
+		pad.end.set(padEnd, padDistance);
 
 		// configure instance variables related to the ball
-		cannonball.x = pad.start.x + 20; 
-		cannonball.y = (pad.start.y + pad.end.y) / 2; 
+		cannonball.y = pad.start.y - cannonballRadius - 10;
+		cannonball.x = (pad.start.x + pad.end.x) / 2;
 		
 		if (gameOver) {
 			gameOver = false; // the game is not over
@@ -271,18 +273,18 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			cannonball.x += interval * cannonballVelocityX;
 			cannonball.y += interval * cannonballVelocityY;
 			// check for collision with pad
-			if (cannonball.y + cannonballRadius >= pad.start.y
-					&& cannonball.y - cannonballRadius <= pad.end.y
-					&& cannonball.x + cannonballRadius >= padDistance
-					&& cannonball.x - cannonballRadius <= padDistance) {
+			if (cannonball.x + cannonballRadius >= pad.start.x
+					&& cannonball.x - cannonballRadius <= pad.end.x
+					&& cannonball.y + cannonballRadius >= padDistance
+					&& cannonball.y - cannonballRadius <= padDistance) {
 
-				cannonballVelocityX *= -1; // reverse cannonball's X direction
+				cannonballVelocityY *= -1; // reverse cannonball's Y direction
 				soundPool.play(soundMap.get(BLOCKER_SOUND_ID), 1, 1, 1, 0, 1f); 
 			} // end if
 
 			// check for collisions with left or right walls
 			if (cannonball.x + cannonballRadius >= screenWidth) {
-				cannonballVelocityX *= -1; // reverse cannonball's X direction
+				cannonballVelocityX *= -1; // reverse cannonball's Y direction
 				cannonball.x = screenWidth - cannonballRadius;
 			}
 			if (cannonball.x - cannonballRadius <= 0){
@@ -308,20 +310,20 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 
 			// check for collisions with targets
 			for (int i = 0; i < NUM_TARGET_LINE; i++) {
-				if (cannonball.y + cannonballRadius >= target[i].start.y
-						&& cannonball.y - cannonballRadius <= target[i].end.y
-						&& cannonball.x + cannonballRadius >= targetDistance[i]
-						&& cannonball.x - cannonballRadius <= targetDistance[i]) {
+				if (cannonball.x + cannonballRadius >= target[i].start.x
+						&& cannonball.x - cannonballRadius <= target[i].end.x
+						&& cannonball.y + cannonballRadius >= targetDistance[i]
+						&& cannonball.y - cannonballRadius <= targetDistance[i]) {
 					// determine target section number (0 is the top)
-					int section = (int) ((cannonball.y - target[i].start.y) / pieceLength);
+					int section = (int) ((cannonball.x - target[i].start.x) / pieceLength);
 
 					// check if the piece hasn't been hit yet
 					if ((section >= 0 && section < TARGET_PIECES)
 							&& !hitStates[i][section]) {
 						hitStates[i][section] = true; // section was hit
-						cannonballVelocityX *= -1; // reverse the cannonball's x
+						cannonballVelocityY *= -1; // reverse the cannonball's x
 													// direction
-						totalScore += 100;
+						totalScore += 10;
 						Log.d("value of  score:", Integer.toString(totalScore));
 						// play target hit sound
 						soundPool.play(soundMap.get(TARGET_SOUND_ID), 1, 1, 1,
@@ -374,8 +376,8 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	// fires a cannonball
 	public void fireCannonball(MotionEvent event) {
 
-		cannonball.x = pad.start.x + 20;
-		cannonball.y = (pad.start.y + pad.end.y) / 2;
+		cannonball.y = pad.start.y - cannonballRadius - 10;
+		cannonball.x = (pad.start.x + pad.end.x) / 2;
 
 		if (cannonballFired)
 			return;
@@ -421,18 +423,18 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	public void movePad(MotionEvent e1, MotionEvent e2, float distanceX,
 			float distanceY) {
 		// update the pad position
-		double scrollDistance = distanceY;
+		double scrollDistance = distanceX;
 
 		// if the pad hit the top or bottom, reverse direction
-		if (pad.start.y < 0) {
-			pad.start.y = 0;
-			pad.end.y = pad.start.y + padLen;
-		} else if (pad.end.y > screenHeight) {
-			pad.end.y = screenHeight;
-			pad.start.y = pad.end.y - padLen;
+		if (pad.start.x < 0) {
+			pad.start.x = 0;
+			pad.end.x = pad.start.x + padLen;
+		} else if (pad.end.x > screenWidth) {
+			pad.end.x = screenWidth;
+			pad.start.x = pad.end.x - padLen;
 		} else {
-			pad.start.y -= scrollDistance;
-			pad.end.y -= scrollDistance;
+			pad.start.x -= scrollDistance;
+			pad.end.x -= scrollDistance;
 		}
 	}
 
@@ -446,8 +448,13 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		textPaint.setColor(Color.BLUE);
 		canvas.drawText(
 				getResources().getString(R.string.score,
-						totalScore), 30, 50, textPaint);
-
+						totalScore), 30, 90, textPaint);
+		
+		if(!cannonballFired){
+			// configure instance variables related to the ball
+			cannonball.y = pad.start.y - cannonballRadius - 10;
+			cannonball.x = (pad.start.x + pad.end.x) / 2;
+		}
 		// draw the cannon ball
 		canvas.drawCircle(cannonball.x, cannonball.y, cannonballRadius,
 				cannonballPaint);
@@ -477,12 +484,11 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						targetPaint.setColor(Color.BLUE);
 
 					canvas.drawLine(currentPoint.x, currentPoint.y,
-							currentPoint.x,
-							(int) (currentPoint.y + pieceLength), targetPaint);
+							(int)(currentPoint.x + pieceLength), currentPoint.y, targetPaint);
 				} // end if
 
 				// move curPoint to the start of the next piece
-				currentPoint.y += pieceLength;
+				currentPoint.x += pieceLength;
 			} // end for
 		}
 	} // end method drawGameElements

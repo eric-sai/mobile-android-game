@@ -6,16 +6,6 @@
     android:orientation="vertical" >
 
 <!-- Added by JunHan 15/08/2014 -->
-
-      <TextView
-          android:id="@+id/textView1"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_alignRight="@+id/btnDownload"
-          android:layout_below="@+id/textView2"
-          android:layout_marginTop="35dp"
-          android:text="Breakout"
-          android:textAppearance="?android:attr/textAppearanceLarge" />
        
 
 
@@ -33,6 +23,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_alignLeft="@+id/textView1"
+          android:layout_alignRight="@+id/textView1"
           android:layout_below="@+id/enterBut"
           android:text="local level" />
 
@@ -49,8 +40,8 @@
            android:id="@+id/enterBut"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:layout_alignLeft="@+id/textView1"
-           android:layout_alignRight="@+id/localBut"
+           android:layout_alignLeft="@+id/localBut"
+           android:layout_alignRight="@+id/textView1"
            android:layout_below="@+id/textView1"
            android:text="start" />
 
@@ -65,16 +56,6 @@
            android:textAppearance="?android:attr/textAppearanceLarge" />
 
        <Button
-           android:id="@+id/exitBut"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignLeft="@+id/continueBut"
-           android:layout_alignParentBottom="true"
-           android:layout_alignRight="@+id/continueBut"
-           android:layout_marginBottom="23dp"
-           android:text="Exit" />
-
-       <Button
            android:id="@+id/continueBut"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
@@ -87,9 +68,27 @@
            android:id="@+id/btnDownload"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:layout_alignLeft="@+id/textView2"
+           android:layout_alignLeft="@+id/topBut"
+           android:layout_alignRight="@+id/topBut"
            android:layout_below="@+id/topBut"
-           android:layout_marginLeft="18dp"
            android:text="Download" />
+
+       <Button
+           android:id="@+id/exitBut"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignLeft="@+id/continueBut"
+           android:layout_alignRight="@+id/continueBut"
+           android:layout_below="@+id/continueBut"
+           android:text="Exit" />
+
+       <TextView
+           android:id="@+id/textView1"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_below="@+id/textView2"
+           android:layout_centerHorizontal="true"
+           android:text="Breakout"
+           android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

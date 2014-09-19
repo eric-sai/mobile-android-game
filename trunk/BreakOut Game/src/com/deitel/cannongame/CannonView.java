@@ -382,12 +382,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	// fires a cannonball
 	public void fireCannonball(MotionEvent event) {
 
-		cannonball.y = pad.start.y - cannonballRadius - 10;
-		cannonball.x = (pad.start.x + pad.end.x) / 2;
+
 
 		if (cannonballFired)
 			return;
-
+		cannonball.y = pad.start.y - cannonballRadius - 10;
+		cannonball.x = (pad.start.x + pad.end.x) / 2;
 		cannonballFired = true;
 
 		//double angle = alignCannon(event); // get the cannon barrel's angle

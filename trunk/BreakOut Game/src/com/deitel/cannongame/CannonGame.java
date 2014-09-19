@@ -22,6 +22,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class CannonGame extends Activity implements OnClickListener {
 	private GestureDetector gestureDetector; // listens for double taps
@@ -30,8 +31,16 @@ public class CannonGame extends Activity implements OnClickListener {
 	// added by JunHan 16/08/2014
 	private final static String SERVER_URL = "10.9.250.124";
 	private static String FILE_NAME = "test";
+	
+	//private TextView currtscoreView;
+	
 
 	private Button btnDownload; // btnDownload. added by JunHan 15/08/2014
+	private TextView currtscoreView;
+	private TextView currtLevel;
+	
+	private int totalscore;
+	private int currtlevel;
 
 	// Handler. added by JunHan 15/08/2014
 	@SuppressLint("HandlerLeak")
@@ -39,9 +48,31 @@ public class CannonGame extends Activity implements OnClickListener {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
+			switch(msg.what){
+				case 1:
+					//score updated
+					totalscore +=10;
+					currtscoreView.setText(Integer.toString(totalscore));
+					break;
+				case 2:
+					//level up
+					currtlevel++;
+					currtLevel.setText(Integer.toString(currtlevel));
+					break;
+				case 3:
+					//level reseted
+					currtlevel = 1;
+					currtLevel.setText(Integer.toString(currtlevel));
+					break;
+			}
 			// Do main
 		}
 	};
+	
+	public void sendMessage(int what) {
+		Message msg1 = handler.obtainMessage(what);
+		handler.sendMessage(msg1);
+	}
 
 	// called when the app first launches
 	@Override
@@ -49,6 +80,8 @@ public class CannonGame extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState); // call super's onCreate method
 		setContentView(R.layout.welcome); // inflate the layout
 
+		totalscore = 0;
+		currtlevel = 1;
 		enter = (Button) findViewById(R.id.enterBut);
 
 		help = (Button) findViewById(R.id.helpBut);
@@ -91,7 +124,12 @@ public class CannonGame extends Activity implements OnClickListener {
 			setContentView(R.layout.main);
 			// get the CannonView
 			cannonView = (CannonView) findViewById(R.id.cannonView);
-
+			
+			currtscoreView = (TextView) findViewById(R.id.currtscoreView);
+			currtscoreView.setText(" "+ Integer.toString(totalscore));
+			
+			currtLevel = (TextView) findViewById(R.id.currtLevel);
+			currtLevel.setText(" "+ Integer.toString(currtlevel));
 			// initialize the GestureDetector
 			gestureDetector = new GestureDetector(this, gestureListener);
 		}

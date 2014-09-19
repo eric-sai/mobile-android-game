@@ -95,11 +95,14 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	private Paint targetPaint; // Paint used to draw the target
 	private Paint backgroundPaint; // Paint used to clear the drawing area
 	private Paint padPaint; // Paint used to draw padder
+	
+	CannonGame father;
 
 	// public constructor
 	public CannonView(Context context, AttributeSet attrs) {
 		super(context, attrs); // call super's constructor
 		activity = (Activity) context;
+		this.father = (CannonGame) context;
 
 		// register SurfaceHolder.Callback listener
 		getHolder().addCallback(this);
@@ -326,6 +329,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						cannonballVelocityY *= -1; // reverse the cannonball's x
 													// direction
 						totalScore += 10;
+						this.father.sendMessage(1);
 						Log.d("value of  score:", Integer.toString(totalScore));
 						// play target hit sound
 						soundPool.play(soundMap.get(TARGET_SOUND_ID), 1, 1, 1,
@@ -514,6 +518,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						public void onClick(DialogInterface dialog, int which) {
 							dialogIsDisplayed = false;
 							totalScore = 0;
+							father.sendMessage(3);
 							newGame("level1"); // set up and start a new game
 						} // end method onClick
 					} // end anonymous inner class
@@ -531,6 +536,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						public void onClick(DialogInterface dialog, int which) {
 							dialogIsDisplayed = false;
 							totalScore = 0;
+							father.sendMessage(3);
 							newGame("level1"); // set up and start a new game
 						} // end method onClick
 					} // end anonymous inner class
@@ -545,6 +551,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 							if(currtLevel > 2 && !downloaded){
 								currtLevel = 1;
 							}
+							father.sendMessage(2);
 							newGame("level"+Integer.toString(currtLevel));
 						}// set up and start a new game
 					} // end method onClick

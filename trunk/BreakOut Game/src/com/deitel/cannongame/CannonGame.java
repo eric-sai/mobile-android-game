@@ -52,17 +52,19 @@ public class CannonGame extends Activity implements OnClickListener {
 				case 1:
 					//score updated
 					totalscore +=10;
-					currtscoreView.setText(Integer.toString(totalscore));
+					currtscoreView.setText("   " + Integer.toString(totalscore));
 					break;
 				case 2:
 					//level up
 					currtlevel++;
-					currtLevel.setText(Integer.toString(currtlevel));
+					currtLevel.setText("   " + Integer.toString(currtlevel));
 					break;
 				case 3:
 					//level reseted
 					currtlevel = 1;
-					currtLevel.setText(Integer.toString(currtlevel));
+					totalscore = 0;
+					currtscoreView.setText("   " + Integer.toString(totalscore));
+					currtLevel.setText("   " + Integer.toString(currtlevel));
 					break;
 			}
 			// Do main

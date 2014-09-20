@@ -205,7 +205,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		targetPaint.setStrokeWidth(lineWidth / 2); // set line thickness
 		backgroundPaint.setColor(Color.WHITE); // set background color
 
-		newGame("level"+Integer.toString(currtLevel)); // set up and start a new game
+		newGame("Breakout-level"+Integer.toString(currtLevel)); // set up and start a new game
 	} // end method onSizeChanged
 
 	// reset all the screen elements and start a new game
@@ -519,7 +519,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 							dialogIsDisplayed = false;
 							totalScore = 0;
 							father.sendMessage(3);
-							newGame("level1"); // set up and start a new game
+							newGame("Breakout-level1"); // set up and start a new game
 						} // end method onClick
 					} // end anonymous inner class
 					); // end call to setPositiveButton
@@ -537,7 +537,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 							dialogIsDisplayed = false;
 							totalScore = 0;
 							father.sendMessage(3);
-							newGame("level1"); // set up and start a new game
+							newGame("Breakout-level1"); // set up and start a new game
 						} // end method onClick
 					} // end anonymous inner class
 					); // end call to setPositiveButton
@@ -552,7 +552,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 								currtLevel = 1;
 							}
 							father.sendMessage(2);
-							newGame("level"+Integer.toString(currtLevel));
+							newGame("Breakout-level"+Integer.toString(currtLevel));
 						}// set up and start a new game
 					} // end method onClick
 					);

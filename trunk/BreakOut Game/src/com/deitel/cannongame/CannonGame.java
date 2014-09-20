@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -41,6 +42,7 @@ public class CannonGame extends Activity implements OnClickListener {
 	
 	private int totalscore;
 	private int currtlevel;
+	private VelocityTracker vt;
 
 	// Handler. added by JunHan 15/08/2014
 	@SuppressLint("HandlerLeak")
@@ -93,6 +95,8 @@ public class CannonGame extends Activity implements OnClickListener {
 		enter.setOnClickListener(this);
 		help.setOnClickListener(this);
 		btnDownload.setOnClickListener(this);
+		
+		vt=null;
 
 		// allow volume keys to set game volume
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -204,6 +208,13 @@ public class CannonGame extends Activity implements OnClickListener {
 		// the user user touched the screen or dragged along the screen
 		if (action == MotionEvent.ACTION_DOWN
 				|| action == MotionEvent.ACTION_MOVE) {
+			if(vt==null){
+				vt=VelocityTracker.obtain();
+			}
+			else{
+				vt.clear();
+			}
+			vt.addMovement(event);
 			cannonView.alignCannon(event); // align the cannon
 		} // end if
 
@@ -225,6 +236,8 @@ public class CannonGame extends Activity implements OnClickListener {
 		public boolean onScroll(MotionEvent e1, MotionEvent e2,
 				float distanceX, float distanceY) {
 			cannonView.movePad(e1, e2, distanceX, distanceY);
+			vt.computeCurrentVelocity(1000);
+			cannonView.padVelocity=vt.getXVelocity();
 			return true;
 		}
 	}; // end gestureListener

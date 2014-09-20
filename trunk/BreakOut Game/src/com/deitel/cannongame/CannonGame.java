@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.apache.http.util.EncodingUtils;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -39,6 +41,7 @@ public class CannonGame extends Activity implements OnClickListener {
 	private Button btnDownload; // btnDownload. added by JunHan 15/08/2014
 	private TextView currtscoreView;
 	private TextView currtLevel;
+	private TextView lastScore;
 	
 	private int totalscore;
 	private int currtlevel;
@@ -123,6 +126,22 @@ public class CannonGame extends Activity implements OnClickListener {
 		}
 	}
 
+	public String readRecord(){
+		String res ="";
+		try{
+			FileInputStream fin = openFileInput("BKT-Gamerecord");
+			int length = fin.available();
+			byte[] buffer = new byte[length];
+			fin.read(buffer);
+			res = EncodingUtils.getString(buffer, "UTF-8");
+			fin.close();
+		}
+		catch(Exception e){
+			Log.e("FileNotFoundException", "Couldn't find or open policy file");
+			//e.printStackTrace();
+		}
+		return res;
+	}
 	public void onClick(View v) {
 
 		if (v.getId() == R.id.enterBut) {
@@ -130,6 +149,8 @@ public class CannonGame extends Activity implements OnClickListener {
 			setContentView(R.layout.main);
 			// get the CannonView
 			cannonView = (CannonView) findViewById(R.id.cannonView);
+			lastScore = (TextView) findViewById(R.id.lastScore);
+			lastScore.setText(readRecord());
 			
 			currtscoreView = (TextView) findViewById(R.id.currtscoreView);
 			currtscoreView.setText(" "+ Integer.toString(totalscore));

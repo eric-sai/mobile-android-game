@@ -62,7 +62,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	private int padBeginning;
 	private int padEnd;
 	// for extension tasks.
-	private float padVelocity;
+	public float padVelocity;
 
 	private int lineWidth; // width of the target and blocker
 	private int linegap;
@@ -330,6 +330,8 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 													// direction
 						totalScore += 10;
 						this.father.sendMessage(1);
+						Log.d("pad speed:",String.valueOf(padVelocity));
+						cannonball.x += interval * padVelocity/1000;
 						Log.d("value of  score:", Integer.toString(totalScore));
 						// play target hit sound
 						soundPool.play(soundMap.get(TARGET_SOUND_ID), 1, 1, 1,
@@ -382,8 +384,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	// fires a cannonball
 	public void fireCannonball(MotionEvent event) {
 
-
-
 		if (cannonballFired)
 			return;
 		cannonball.y = pad.start.y - cannonballRadius - 10;
@@ -430,7 +430,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			float distanceY) {
 		// update the pad position
 		double scrollDistance = distanceX;
-
+		
 		// if the pad hit the top or bottom, reverse direction
 		if (pad.start.x < 0) {
 			pad.start.x = 0;

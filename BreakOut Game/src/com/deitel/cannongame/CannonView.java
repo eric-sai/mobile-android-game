@@ -140,17 +140,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		backgroundPaint = new Paint(); // Paint for drawing the target
 	} // end CannonView constructor
 	
-	public void logGameSettings(int level){
-		String filename = "level" + Integer.toString(level);
-		
-		String gameSetting
-			= Integer.toString(padLen) + ","
-			+ Integer.toString(cannonballSpeed) +","
-			+ Integer.toString(sumOfBricks) + ",";
-		
-		writeFiles(filename,gameSetting);
-	}
-	
 	public String readGameSettings(String filename){
 		String gameSetting = null;
 		try {
@@ -344,16 +333,12 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		} // end if
 	} // end method updatePositions
 	
-	public void writeFiles(String name, String file) {
-		// Log.d("log", "writeFiles");
+	public void writeRecord(String file) {
 		try {
-			FileOutputStream fos = this.getContext().openFileOutput(name,
+			FileOutputStream fos = this.getContext().openFileOutput("BKT-Gamerecord",
 					Context.MODE_PRIVATE);
 			fos.write(file.getBytes());
-			Log.d(name, "created");
-			//Log.d("log", new String(file.getBytes()));
 			fos.close();
-
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -361,24 +346,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	public String readFiles(String filename){
-		String res ="";
-		try{
-			Log.d(filename,"reading");
-			FileInputStream fin = this.getContext().openFileInput(filename);
-			int length = fin.available();
-			byte[] buffer = new byte[length];
-			fin.read(buffer);
-			res = EncodingUtils.getString(buffer, "UTF-8");
-			fin.close();
-		}
-		catch(Exception e){
-			Log.e("FileNotFoundException", "Couldn't find or open policy file");
-			//e.printStackTrace();
-		}
-		return res;
 	}
 
 	// fires a cannonball
@@ -535,6 +502,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							dialogIsDisplayed = false;
+							writeRecord(Integer.toString(totalScore)+",");
 							totalScore = 0;
 							father.sendMessage(3);
 							newGame("Breakout-level1"); // set up and start a new game
@@ -673,10 +641,9 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
-			} // end while
-		} // end method run
-	} // end nested class CannonThread
+			}
+		}
+	}
 
 	private class CollisionDectThread extends Thread {
 

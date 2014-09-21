@@ -336,7 +336,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 	public void writeRecord(String file) {
 		try {
 			FileOutputStream fos = this.getContext().openFileOutput("BKT-Gamerecord",
-					Context.MODE_PRIVATE);
+					Context.MODE_APPEND);
 			fos.write(file.getBytes());
 			fos.close();
 		} catch (FileNotFoundException e) {

@@ -43,6 +43,17 @@ public class CannonGame extends Activity implements OnClickListener {
 	private TextView currtLevel;
 	private TextView lastScore;
 	
+	private TextView firstScore;
+	private TextView secondScore;
+	private TextView thirdScore;
+	private TextView forthScore;
+	private TextView fifthScore;
+	private TextView sixthScore;
+	private TextView seventhScore;
+	private TextView eighthScore;
+	private TextView ninethScore;
+	private TextView tenthScore;
+	
 	private int totalscore;
 	private int currtlevel;
 	private VelocityTracker vt;
@@ -142,6 +153,60 @@ public class CannonGame extends Activity implements OnClickListener {
 		}
 		return res;
 	}
+	
+	public String highstScore(){
+		String res = "";
+		String[] records = readRecord().split(",");
+		int highest = Integer.parseInt(records[0]);
+		for(int i =0; i<records.length;i++){
+			if(Integer.parseInt(records[i])>highest){
+				highest = Integer.parseInt(records[i]);
+			}	
+		}
+		res = Integer.toString(highest);
+		return res;
+	}
+	
+	public void displayTopTen(){
+		
+		//get top ten scores from record file.
+		String[] records = readRecord().split(",");
+		for(int i=0;i<records.length;i++){
+			for(int j=0;j<records.length;j++){
+				String temp;
+				if(Integer.parseInt(records[i]) > Integer.parseInt(records[j])){
+					temp = records[i];
+					records[i] = records[j];
+					records[j] = temp;
+				}
+			}
+		}
+		String[] scores = new String[10];
+		for(int i=0;i<10;i++){
+			scores[i] = "";
+		}
+		int num = records.length;
+		if(num>=10)
+			num = 10;
+		for(int i =0; i<num;i++){
+			scores[i] = records[i];
+		}
+		
+		String blanks = "                  ";
+		
+		//Display top ten:
+		firstScore.setText("1" + blanks + scores[0]);
+		secondScore.setText("2" + blanks  + scores[1]);
+		thirdScore.setText("3" + blanks + scores[2]);
+		forthScore.setText("4" + blanks + scores[3]);
+		fifthScore.setText("5" + blanks  + scores[4]);
+		sixthScore.setText("6" + blanks + scores[5]);
+		seventhScore.setText("7" + blanks  + scores[6]);
+		eighthScore.setText("8" + blanks  + scores[7]);
+		ninethScore.setText("9" + blanks  +scores[8]);
+		tenthScore.setText("10" + blanks + scores[9]);
+		
+	}
 	public void onClick(View v) {
 
 		if (v.getId() == R.id.enterBut) {
@@ -150,16 +215,32 @@ public class CannonGame extends Activity implements OnClickListener {
 			// get the CannonView
 			cannonView = (CannonView) findViewById(R.id.cannonView);
 			lastScore = (TextView) findViewById(R.id.lastScore);
-			lastScore.setText(readRecord());
+			lastScore.setText(highstScore());
 			
 			currtscoreView = (TextView) findViewById(R.id.currtscoreView);
 			currtscoreView.setText(" "+ Integer.toString(totalscore));
 			
 			currtLevel = (TextView) findViewById(R.id.currtLevel);
 			currtLevel.setText(" "+ Integer.toString(currtlevel));
+			
+			// Display the ladder scores:
+			firstScore = (TextView) findViewById(R.id.first);
+			secondScore = (TextView) findViewById(R.id.second);
+			thirdScore = (TextView) findViewById(R.id.third);
+			forthScore = (TextView) findViewById(R.id.forth);
+			fifthScore = (TextView) findViewById(R.id.fifth);
+			sixthScore = (TextView) findViewById(R.id.sixth);
+			seventhScore = (TextView) findViewById(R.id.seven);
+			eighthScore = (TextView) findViewById(R.id.eighth);
+			ninethScore = (TextView) findViewById(R.id.nineth);
+			tenthScore = (TextView) findViewById(R.id.tenth);
+			displayTopTen();
+			
 			// initialize the GestureDetector
 			gestureDetector = new GestureDetector(this, gestureListener);
 		}
+		
+		
 		// download. Added by JunHan 15/08/2014
 		if (v.getId() == R.id.btnDownload) {
 

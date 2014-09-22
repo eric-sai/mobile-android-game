@@ -13,6 +13,7 @@ import org.apache.http.util.EncodingUtils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import com.deitel.cannongame.Topten;
 
 public class CannonGame extends Activity implements OnClickListener {
 	private GestureDetector gestureDetector; // listens for double taps
@@ -43,17 +45,6 @@ public class CannonGame extends Activity implements OnClickListener {
 	private TextView currtscoreView;
 	private TextView currtLevel;
 	private TextView lastScore;
-	
-	private TextView firstScore;
-	private TextView secondScore;
-	private TextView thirdScore;
-	private TextView forthScore;
-	private TextView fifthScore;
-	private TextView sixthScore;
-	private TextView seventhScore;
-	private TextView eighthScore;
-	private TextView ninethScore;
-	private TextView tenthScore;
 	
 	private int totalscore;
 	private int currtlevel;
@@ -171,46 +162,6 @@ public class CannonGame extends Activity implements OnClickListener {
 		return res;
 	}
 	
-	public void displayTopTen(){
-		
-		//get top ten scores from record file.
-		String[] records = readRecord().split(",");
-		for(int i=0;i<records.length;i++){
-			for(int j=0;j<records.length;j++){
-				String temp;
-				if(Integer.parseInt(records[i]) > Integer.parseInt(records[j])){
-					temp = records[i];
-					records[i] = records[j];
-					records[j] = temp;
-				}
-			}
-		}
-		String[] scores = new String[10];
-		for(int i=0;i<10;i++){
-			scores[i] = "";
-		}
-		int num = records.length;
-		if(num>=10)
-			num = 10;
-		for(int i =0; i<num;i++){
-			scores[i] = records[i];
-		}
-		
-		String blanks = "                  ";
-		
-		//Display top ten:
-		firstScore.setText(scores[0]);
-		secondScore.setText(scores[1]);
-		thirdScore.setText(scores[2]);
-		forthScore.setText(scores[3]);
-		fifthScore.setText(scores[4]);
-		sixthScore.setText(scores[5]);
-		seventhScore.setText(scores[6]);
-		eighthScore.setText(scores[7]);
-		ninethScore.setText(scores[8]);
-		tenthScore.setText(scores[9]);
-		
-	}
 	public void onClick(View v) {
 
 		if (v.getId() == R.id.enterBut) {
@@ -278,36 +229,28 @@ public class CannonGame extends Activity implements OnClickListener {
 		}
 		
 		if(v.getId() == R.id.topBut){
-			setContentView(R.layout.topten);
-			
-			// Display the ladder scores:
-			firstScore = (TextView) findViewById(R.id.first);
-			secondScore = (TextView) findViewById(R.id.second);
-			thirdScore = (TextView) findViewById(R.id.third);
-			forthScore = (TextView) findViewById(R.id.forth);
-			fifthScore = (TextView) findViewById(R.id.fifth);
-			sixthScore = (TextView) findViewById(R.id.sixth);
-			seventhScore = (TextView) findViewById(R.id.seventh);
-			eighthScore = (TextView) findViewById(R.id.eighth);
-			ninethScore = (TextView) findViewById(R.id.nineth);
-			tenthScore = (TextView) findViewById(R.id.tenth);
-			displayTopTen();
-			
+			gotoTopten();
 		}
+	}
+	private void gotoTopten(){
+		Intent intent = new Intent();
+		intent.setClass(CannonGame.this, Topten.class);
+		CannonGame.this.finish();
+		CannonGame.this.startActivity(intent);
 	}
 
 	// when the app is pushed to the background, pause it
 	@Override
 	public void onPause() {
 		super.onPause(); // call the super method
-		cannonView.stopGame(); // terminates the game
+		//cannonView.stopGame(); // terminates the game
 	} // end method onPause
 
 	// release resources
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		cannonView.releaseResources();
+		//cannonView.releaseResources();
 	} // end method onDestroy
 
 	// called when the user touches the screen in this Activity

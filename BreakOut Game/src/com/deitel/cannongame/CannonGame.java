@@ -39,6 +39,7 @@ public class CannonGame extends Activity implements OnClickListener {
 	
 
 	private Button btnDownload; // btnDownload. added by JunHan 15/08/2014
+	private Button topten;
 	private TextView currtscoreView;
 	private TextView currtLevel;
 	private TextView lastScore;
@@ -105,10 +106,13 @@ public class CannonGame extends Activity implements OnClickListener {
 		help = (Button) findViewById(R.id.helpBut);
 
 		btnDownload = (Button) findViewById(R.id.btnDownload);
+		
+		topten = (Button) findViewById(R.id.topBut);
 
 		enter.setOnClickListener(this);
 		help.setOnClickListener(this);
 		btnDownload.setOnClickListener(this);
+		topten.setOnClickListener(this);
 		
 		vt=null;
 
@@ -195,16 +199,16 @@ public class CannonGame extends Activity implements OnClickListener {
 		String blanks = "                  ";
 		
 		//Display top ten:
-		firstScore.setText("1" + blanks + scores[0]);
-		secondScore.setText("2" + blanks  + scores[1]);
-		thirdScore.setText("3" + blanks + scores[2]);
-		forthScore.setText("4" + blanks + scores[3]);
-		fifthScore.setText("5" + blanks  + scores[4]);
-		sixthScore.setText("6" + blanks + scores[5]);
-		seventhScore.setText("7" + blanks  + scores[6]);
-		eighthScore.setText("8" + blanks  + scores[7]);
-		ninethScore.setText("9" + blanks  +scores[8]);
-		tenthScore.setText("10" + blanks + scores[9]);
+		firstScore.setText(scores[0]);
+		secondScore.setText(scores[1]);
+		thirdScore.setText(scores[2]);
+		forthScore.setText(scores[3]);
+		fifthScore.setText(scores[4]);
+		sixthScore.setText(scores[5]);
+		seventhScore.setText(scores[6]);
+		eighthScore.setText(scores[7]);
+		ninethScore.setText(scores[8]);
+		tenthScore.setText(scores[9]);
 		
 	}
 	public void onClick(View v) {
@@ -222,19 +226,6 @@ public class CannonGame extends Activity implements OnClickListener {
 			
 			currtLevel = (TextView) findViewById(R.id.currtLevel);
 			currtLevel.setText(" "+ Integer.toString(currtlevel));
-			
-			// Display the ladder scores:
-			firstScore = (TextView) findViewById(R.id.first);
-			secondScore = (TextView) findViewById(R.id.second);
-			thirdScore = (TextView) findViewById(R.id.third);
-			forthScore = (TextView) findViewById(R.id.forth);
-			fifthScore = (TextView) findViewById(R.id.fifth);
-			sixthScore = (TextView) findViewById(R.id.sixth);
-			seventhScore = (TextView) findViewById(R.id.seven);
-			eighthScore = (TextView) findViewById(R.id.eighth);
-			ninethScore = (TextView) findViewById(R.id.nineth);
-			tenthScore = (TextView) findViewById(R.id.tenth);
-			displayTopTen();
 			
 			// initialize the GestureDetector
 			gestureDetector = new GestureDetector(this, gestureListener);
@@ -284,6 +275,24 @@ public class CannonGame extends Activity implements OnClickListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}
+		
+		if(v.getId() == R.id.topBut){
+			setContentView(R.layout.topten);
+			
+			// Display the ladder scores:
+			firstScore = (TextView) findViewById(R.id.first);
+			secondScore = (TextView) findViewById(R.id.second);
+			thirdScore = (TextView) findViewById(R.id.third);
+			forthScore = (TextView) findViewById(R.id.forth);
+			fifthScore = (TextView) findViewById(R.id.fifth);
+			sixthScore = (TextView) findViewById(R.id.sixth);
+			seventhScore = (TextView) findViewById(R.id.seventh);
+			eighthScore = (TextView) findViewById(R.id.eighth);
+			ninethScore = (TextView) findViewById(R.id.nineth);
+			tenthScore = (TextView) findViewById(R.id.tenth);
+			displayTopTen();
+			
 		}
 	}
 

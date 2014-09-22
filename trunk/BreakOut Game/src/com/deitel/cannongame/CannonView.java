@@ -586,6 +586,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			catch (InterruptedException e) {
 			} // end catch
 		} // end while
+		//this.activity.setContentView(R.layout.welcome);
 	} // end method surfaceDestroyed
 
 	// Thread subclass to control the game loop

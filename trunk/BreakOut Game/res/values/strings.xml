@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <string name="app_name">Cannon Game</string>
+   <string name="app_name">BreakOut Game</string>
    <string name="results_format">
       Total Score: %1$d\n</string>
    <string name="reset_game">Reset Game</string>

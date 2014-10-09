@@ -8,6 +8,6 @@
 </head>
 <body>
 <a href ="DownloadServlet?fileName=test">Download</a>
-<a href ="LoginServlet?username=junhan&password=junhan">test login</a>
+<a href ="RegisterServlet?username=junhan&password=junha">test login</a>
 </body>
 </html>

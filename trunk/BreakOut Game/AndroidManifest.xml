@@ -8,25 +8,29 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name" >
         <activity
-            android:name=".CannonGame"
+            android:name="com.unimelb.mobile.breakoutgame.BreakOutMain"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity 
-            android:name=".Login" >
+        <activity
+            android:name="com.unimelb.mobile.breakoutgame.CannonGame">
             
         </activity>
-        <activity
-            android:name=".Regist" >
+        <activity 
+            android:name="com.unimelb.mobile.breakoutgame.Login" >
         </activity>
         <activity
-            android:name=".Topten">
-
+            android:name="com.unimelb.mobile.breakoutgame.Regist" >
+        </activity>
+        <activity
+            android:name="com.unimelb.mobile.breakoutgame.Topten">
+        </activity>
+                <activity
+            android:name="com.unimelb.mobile.breakoutgame.LocalGame">
         </activity>
     </application>
 

@@ -64,4 +64,35 @@ public class UserDaoImpl implements IUserDao {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.unimelb.mobile.breakout.server.dao.IUserDao#findSocreById(int)
+	 */
+	@Override
+	public int findSocreById(int uid) {
+		String strSQL = "select score from user_info where uid =?";
+		ResultSet rs = this.dbconn.execQuery(strSQL, new Object[]{uid});
+		int score=0;
+		try {
+			rs.next();
+			score = rs.getInt(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			this.dbconn.closeConn();
+		}
+		return score;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.unimelb.mobile.breakout.server.dao.IUserDao#updateUser(com.unimelb.mobile.breakout.server.po.User)
+	 */
+	@Override
+	public int updateScore(int uid, int score) {
+		String strSQL = "update user_info set score=? where uid=?";
+		int result  = this.dbconn.execOther(strSQL,new Object[]{score,uid});
+		this.dbconn.closeConn();
+		return result;
+	}
+
 }

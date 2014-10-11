@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/welcome"
+    android:orientation="vertical" >
+
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="38dp"
+        android:layout_marginRight="134dp"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/topBut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/btnDownload"
+            android:layout_alignBottom="@+id/btnDownload"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/btn"
+            android:text="Top 10"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnDownload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/localBut"
+            android:layout_alignBottom="@+id/localBut"
+            android:layout_toLeftOf="@+id/topBut"
+            android:background="@drawable/btn"
+            android:text="Download Level"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/helpBut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/topBut"
+            android:layout_alignBottom="@+id/topBut"
+            android:layout_toRightOf="@+id/topBut"
+            android:background="@drawable/btn"
+            android:text="Help"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/localBut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn"
+            android:text="Local Level"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/exitBut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/helpBut"
+            android:layout_alignBottom="@+id/helpBut"
+            android:layout_toRightOf="@+id/helpBut"
+            android:background="@drawable/btn"
+            android:text="Exit"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/enterBut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/linearLayout1"
+        android:layout_marginLeft="245dp"
+        android:layout_marginTop="39dp"
+        android:background="@drawable/start" />
+
+</RelativeLayout>

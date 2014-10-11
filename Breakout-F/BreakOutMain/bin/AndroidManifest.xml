@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.unimelb.mobile.breakout"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <application
+        android:icon="@drawable/icon"
+        android:label="@string/app_name" >
+        <activity
+            android:name="com.unimelb.mobile.breakoutgame.BreakOutMain"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
+
+        </activity>
+        <activity
+            android:name="com.unimelb.mobile.breakoutgame.CannonGame">     
+        </activity>
+        <activity 
+            android:name="com.unimelb.mobile.breakoutgame.Login" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.unimelb.mobile.breakoutgame.Regist" >
+        </activity>
+        <activity
+            android:name="com.unimelb.mobile.breakoutgame.Topten">
+        </activity>
+        <activity
+            android:name="com.unimelb.mobile.breakoutgame.FileDownProcessBarActivity">
+        </activity>
+        <activity
+            android:name="com.unimelb.mobile.breakoutgame.LocalGame">
+        </activity>
+        <activity android:name="com.unimelb.mobile.breakoutgame.Help"></activity>
+    </application>
+
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="10" />
+    <!-- Add two permissions. Modified by JunHan 15/08/2014 -->
+    <!-- permission of Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- permission of SD card -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+</manifest>

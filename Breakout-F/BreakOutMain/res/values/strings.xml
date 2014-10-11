@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+   <string name="app_name">BreakOut Game</string>
+   <string name="results_format">
+      Total Score: %1$d\n</string>
+   <string name="life_format">
+       Life Remained: %1$d\n</string>
+   <string name="reset_game">Reset Game</string>
+   <string name="retry">Retry</string>
+   <string name="next_level">Next Level</string>
+   <string name="win">You win!</string>
+   <string name="lose">You lose!</string>
+   <string name="life_reduced">Life Reduced!</string>
+   <string name="time_used_format">
+      Time used: %.1f seconds</string>
+    
+    <string name="welcome">Welcome to BreakOut Game</string>
+    <string name="games">Games</string>
+    <string name="login">Login</string>
+    <string name="forgetpass">Forget passward</string>
+    <string name="regist">Regist</string>
+    <string name="score">totalScore: %1$d</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+
+</resources>

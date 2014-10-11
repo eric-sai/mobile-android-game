@@ -1,0 +1,7 @@
+
+    <resources xmlns:android="http://schemas.android.com/apk/res/android">
+        <color android:layout_width="wrap_content" android:id="@+id/color1" android:layout_height="wrap_content" name="background_color">#FFFFCC</color>
+        <color name="LinerLayoutBGC">#ffffff</color>
+        <color name="bricks_color1">#ffffff</color>
+        <color name="bricks_color2">#ffffff</color>
+    </resources>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/login"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/WelcomeLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/Button_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btnlogin" />
+
+        <Button
+            android:id="@+id/Button_regist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btnregister" />
+
+        <Button
+            android:id="@+id/Button_guest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btnoffline" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/WelcomeLayout01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/WelcomeLayout2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="33dp"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/username_text"
+            android:layout_width="311dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="username"
+            android:maxLength="80"
+            android:textColorHint="#238745" />
+
+        <EditText
+            android:id="@+id/password_text"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="password"
+            android:inputType="textPassword"
+            android:maxLength="80"
+            android:textColorHint="#238745" />
+    </LinearLayout>
+
+</RelativeLayout>

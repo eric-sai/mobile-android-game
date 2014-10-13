@@ -432,7 +432,6 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 						public void onClick(DialogInterface dialog, int which) {
 							dialogIsDisplayed = false;
 							String record = playerName+"," + Integer.toString(totalScore)+",";
-							Log.d("Write:",record);
 							writeRecord(record);
 							totalScore = 0;
 							life =2;
@@ -641,6 +640,10 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		// ensure that thread terminates properly
 		boolean retry = true;
 		gameThread.setRunning(false);
+		
+		// save game record.
+		String record = playerName+"," + Integer.toString(totalScore)+",";
+		writeRecord(record);
 
 		while (retry) {
 			try {

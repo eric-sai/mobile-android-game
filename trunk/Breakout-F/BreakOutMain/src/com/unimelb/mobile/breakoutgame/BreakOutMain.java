@@ -33,6 +33,7 @@ public class BreakOutMain extends Activity implements OnClickListener{
 	private Button btnDownload; // btnDownload. added by JunHan 15/08/2014
 	private Button topten;
 	private Button localGame;
+	private Button exit;
 	
 	public boolean choselvl;
 	public boolean downloaded;
@@ -58,7 +59,7 @@ public class BreakOutMain extends Activity implements OnClickListener{
 		topten = (Button) findViewById(R.id.topBut);
 		
 		localGame = (Button) findViewById(R.id.localBut);
-		
+		exit = (Button) findViewById(R.id.exitBut);
 		choselvl = false;
 		breakout = this;
 		downloaded = checkDownload();
@@ -84,6 +85,7 @@ public class BreakOutMain extends Activity implements OnClickListener{
 		btnDownload.setOnClickListener(this);
 		topten.setOnClickListener(this);
 		localGame.setOnClickListener(this);
+		exit.setOnClickListener(this);
 		// allow volume keys to set game volume
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 	}
@@ -197,9 +199,8 @@ public class BreakOutMain extends Activity implements OnClickListener{
 		
 		// download. Added by JunHan 15/08/2014
 		if (v.getId() == R.id.btnDownload) {
-			updatedownload();
-			downloaded = true;
-			downLoad();
+			downLoad();		
+			downloaded = checkDownload();
 		}
 		
 		if (v.getId() == R.id.helpBut) {
@@ -213,6 +214,10 @@ public class BreakOutMain extends Activity implements OnClickListener{
 		if(v.getId() == R.id.localBut){
 			choselvl = true;
 			gotoChosedGame();
+		}
+		
+		if(v.getId() == R.id.exitBut){
+			exit();
 		}
 	}
 	
@@ -256,9 +261,9 @@ public class BreakOutMain extends Activity implements OnClickListener{
 	}
 	
 	private void downLoad(){
-		
 		Intent intent = new Intent();
 		intent.setClass(BreakOutMain.this, FileDownProcessBarActivity.class);
+		//BreakOutMain.this.finish();
 		BreakOutMain.this.startActivity(intent);
 		
 	}
@@ -266,9 +271,16 @@ public class BreakOutMain extends Activity implements OnClickListener{
 	private void showHelp(){
 		Intent intent = new Intent();
 		intent.setClass(BreakOutMain.this, Help.class);
-		//BreakOutMain.this.finish();
+		BreakOutMain.this.finish();
 		BreakOutMain.this.startActivity(intent);
 		
+	}
+	
+	private void exit(){
+		Intent intent = new Intent();
+		intent.setClass(BreakOutMain.this, Login.class);
+		BreakOutMain.this.finish();
+		BreakOutMain.this.startActivity(intent);
 	}
 	
 	@Override

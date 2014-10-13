@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -77,7 +78,7 @@ public class Login extends Activity {
 		setContentView(R.layout.login);
 		username = (EditText) findViewById(R.id.username_text);
 		password = (EditText) findViewById(R.id.password_text);
-
+		this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 		Btn_login = (Button) findViewById(R.id.Button_login);
 		Btn_regist = (Button) findViewById(R.id.Button_regist);
 		Btn_guest = (Button) findViewById(R.id.Button_guest);

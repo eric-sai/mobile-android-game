@@ -12,6 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
  
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -35,12 +36,18 @@ public class FileDownProcessBarActivity extends Activity {
     private InputStream inputStream;
     private URLConnection connection;
     private OutputStream outputStream;
+    
+    public boolean success;
+    
+    public static FileDownProcessBarActivity fpba;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_down_process_bar);
         progressBar=(ProgressBar) findViewById(R.id.progressBar1);
         textView=(TextView) findViewById(R.id.tvDownload);
+        fpba = this;
+        success = false;
         button=(Button) findViewById(R.id.btnDL);
         button.setOnClickListener(new ButtonListener());
     }
@@ -78,6 +85,8 @@ public class FileDownProcessBarActivity extends Activity {
                 textView.setText(x+"%");
                 break;
             case 2:
+            	success = true;
+            	updatedownload();
                 Toast.makeText(getApplicationContext(), "Download Completed", Toast.LENGTH_LONG).show();
                 break;
                  
@@ -88,6 +97,23 @@ public class FileDownProcessBarActivity extends Activity {
         }
           
     };
+    
+	public void updatedownload(){
+		
+		String res = "true";
+		try {
+			FileOutputStream fos = openFileOutput("BKT-DownloadConfig",
+					Context.MODE_PRIVATE);
+			fos.write(res.getBytes());
+			fos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
  
     private void DownFile(String urlString)
     {

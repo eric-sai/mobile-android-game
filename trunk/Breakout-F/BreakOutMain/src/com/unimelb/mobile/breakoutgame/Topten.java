@@ -1,10 +1,16 @@
 package com.unimelb.mobile.breakoutgame;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.apache.http.util.EncodingUtils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -42,6 +48,12 @@ public class Topten extends Activity implements OnClickListener{
 	
 	private Button back;
 	
+	private GetToptenThread gettop;
+	private boolean dialogIsDisplayed;
+	public String[] playerName;
+	public int[] playerId;
+	public int[] score;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); // call super's onCreate method
@@ -72,10 +84,104 @@ public class Topten extends Activity implements OnClickListener{
 		
 		back = (Button) findViewById(R.id.back);
 		
+		playerName = new String[10];
+		playerId = new int[10];
+		score = new int[10];
+		
+		dialogIsDisplayed = false;
 		back.setOnClickListener(this);
+		
+		getServRec();
+
 		displayTopTen();
 		
 	} // end method onCreate
+	
+	public void getServRec(){
+		
+		gettop = new GetToptenThread();
+		gettop.start();
+		
+		if(GetToptenThread.toptenThread.success){
+			int length = GetToptenThread.toptenThread.players.size();
+			for(int i =0;i<length;i++){
+				playerName[i] = GetToptenThread.toptenThread.players.get(i).getUsername();
+				score[i] = GetToptenThread.toptenThread.players.get(i).getScore();
+				playerId[i] = GetToptenThread.toptenThread.players.get(i).getUid();		
+			}
+			saveServRec();
+		}
+		else{
+			showconnectDialog();
+		}
+	}
+	
+	public void saveServRec(){
+		int length = GetToptenThread.toptenThread.players.size();
+		for(int i=0;i<length;i++){
+			String record = playerName[i]+"," + Integer.toString(score[i])+",";
+			writeRecord(record);
+		}
+	}
+	
+	public void writeRecord(String file) {
+		
+		String prevRec = readRecord();
+		Log.d("entered","aa");
+		String[] records = prevRec.split(",");
+		String[] playerIdd = new String[records.length/2];
+		String[] playerScr = new String[records.length/2];
+		int mark=0;
+		for(int i =0; i<records.length;i++){
+			if(records.length>1){
+				if(i%2==0){
+					playerIdd[mark] = records[i];
+					Log.d("preplayer:",playerIdd[mark]);
+					playerScr[mark] = records[i+1];
+					Log.d("preplayersc:",playerScr[mark]);
+					mark++;
+				}
+			}
+		}
+		String[] currtfile = file.split(",");
+		String player = currtfile[0];
+		Log.d("player:",player);
+		String playerscore = currtfile[1];
+		Log.d("score:",playerscore);
+		boolean exist = false;
+		for(int i = 0; i<playerIdd.length;i++){
+			if(player.equals(playerIdd[i])){
+				exist = true;
+				if(Integer.parseInt(playerscore) > Integer.parseInt(playerScr[i])){
+					playerScr[i] = playerscore;
+				}
+			}
+		}
+		if(!exist){
+			prevRec+=file;
+			Log.d("prevRec:",prevRec);
+		}
+		else{
+			prevRec ="";
+			for(int i = 0; i<playerIdd.length;i++){
+				prevRec +=  playerIdd[i] +","+playerScr[i]+",";
+				Log.d("currtRec:",prevRec);
+			}
+		}
+
+		try {
+			FileOutputStream fos = openFileOutput("BKT-Gamerecord",
+					Context.MODE_PRIVATE);
+			fos.write(prevRec.getBytes());
+			fos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	public void displayTopTen(){
 		
@@ -168,6 +274,34 @@ public class Topten extends Activity implements OnClickListener{
 			//e.printStackTrace();
 		}
 		return res;
+	}
+	
+	public void showconnectDialog() {
+		// create a dialog displaying the given String
+		final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+		
+		dialogBuilder.setTitle("Alert");
+		dialogBuilder.setCancelable(false);
+		
+			// display number of shots fired and total time elapsed
+		dialogBuilder.setMessage("Connect to server failuer, only local record displayed!");
+		dialogBuilder.setPositiveButton("ok",
+				new DialogInterface.OnClickListener() {
+						// called when "Reset Game" Button is pressed
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialogIsDisplayed = false;
+						}
+					} 
+					);
+
+		this.runOnUiThread(new Runnable() {
+			public void run() {
+				dialogIsDisplayed = true;
+				dialogBuilder.show(); // display the dialog
+			} 
+		} 
+		);
 	}
 
 	@Override

@@ -1,6 +1,8 @@
 package com.unimelb.mobile.breakout.server.servlet;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -10,18 +12,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.unimelb.mobile.breakout.server.dao.IUserDao;
 import com.unimelb.mobile.breakout.server.dao.impl.UserDaoImpl;
+import com.unimelb.mobile.breakout.server.po.User;
+import com.unimelb.mobile.breakout.server.tools.SerializableObj;
 
 /**
- * Servlet implementation class checkScore
+ * Servlet implementation class TopServlet
  */
-@WebServlet("/checkScore")
-public class checkScore extends HttpServlet {
+@WebServlet("/TopServlet")
+public class TopServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public checkScore() {
+    public TopServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,7 +34,7 @@ public class checkScore extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doPost(request, response);
+	doPost(request, response);
 	}
 
 	/**
@@ -40,13 +44,11 @@ public class checkScore extends HttpServlet {
 		response.setContentType("text/html;charset=utf-8");
 		response.setCharacterEncoding("utf-8");
 		request.setCharacterEncoding("utf-8");
-		int uid = Integer.parseInt( request.getParameter("uid").toString());
-		int score =  0;
 		IUserDao userDao = new UserDaoImpl();
-		score = userDao.findSocreById(uid);
-		System.out.println(score);
-		String result  = score+"";
-		response.getWriter().write(result);
+		List<User> lst = new ArrayList<User>();
+		lst = userDao.getUsers();
+		SerializableObj so = new SerializableObj();
+		response.getOutputStream().write(so.List2Bytes(lst));
 	}
 
 }

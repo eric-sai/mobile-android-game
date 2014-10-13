@@ -7,6 +7,8 @@ package com.unimelb.mobile.breakout.server.dao.impl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.unimelb.mobile.breakout.server.dao.IUserDao;
 import com.unimelb.mobile.breakout.server.dbutil.DBConn;
@@ -93,6 +95,32 @@ public class UserDaoImpl implements IUserDao {
 		int result  = this.dbconn.execOther(strSQL,new Object[]{score,uid});
 		this.dbconn.closeConn();
 		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.unimelb.mobile.breakout.server.dao.IUserDao#getUsers()
+	 */
+	@Override
+	public List<User> getUsers() {
+		String strSQL="SELECT * FROM breakoutgame_mysql.user_info order by score desc limit 10";
+		List<User> lst  = new ArrayList<User>();
+		ResultSet rs = this.dbconn.execQuery(strSQL, new Object[]{});
+		try {
+			while(rs.next()){
+				User user = new User();
+				user.setUid(rs.getInt(1));
+				user.setUsername(rs.getString(2));
+				user.setPassword(rs.getString(3));
+				user.setScore(rs.getInt(4));
+				lst.add(user);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			dbconn.closeConn();
+		}
+		return lst;
 	}
 
 }

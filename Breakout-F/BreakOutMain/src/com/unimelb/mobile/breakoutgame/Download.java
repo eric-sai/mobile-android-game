@@ -18,8 +18,12 @@ public class Download {
 	private String sdcard;
 	private HttpURLConnection urlcon;
 	
+	public static Download download;
+	public boolean success;
+	
 	public Download(String url)
 	{
+		this.success = false;
 		this.strUrl = url;
 		this.sdcard = Environment.getExternalStorageDirectory() + "/";
 		urlcon = getConnection();
@@ -50,6 +54,7 @@ public class Download {
 		try {
 			url = new URL(strUrl);
 			urlcon = (HttpURLConnection) url.openConnection();
+			success = true;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

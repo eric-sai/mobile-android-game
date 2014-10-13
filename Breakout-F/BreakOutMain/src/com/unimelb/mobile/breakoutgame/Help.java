@@ -22,6 +22,8 @@ public class Help extends Activity implements MediaPlayer.OnErrorListener,MediaP
 	private MediaController mc;
 	private Button bt;
 	
+	private boolean finished;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -33,19 +35,28 @@ public class Help extends Activity implements MediaPlayer.OnErrorListener,MediaP
 		bt = (Button) findViewById(R.id.helpback);
 		mc = new MediaController(this);
 		vv.setMediaController(mc);
-		
+		finished = false;
 		vv.setVideoURI(Uri.parse("android.resource://com.unimelb.mobile.breakout/"+R.raw.help));
 		
 		bt.setOnClickListener(this);
 		vv.start();
-
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
+		Thread thread = new Thread(){
+			public void run(){
+				while(!finished){
+					
+				}
+				gotoWelcome();
+			}
+			
+		};
+		thread.start();	
 	}
 
 	@Override
 	public void onCompletion(MediaPlayer mp) {
 		// TODO Auto-generated method stub
-		vv.start();
+		finished = true;
 	}
 
 	@Override
@@ -68,5 +79,4 @@ public class Help extends Activity implements MediaPlayer.OnErrorListener,MediaP
 		Help.this.finish();
 		Help.this.startActivity(intent);
 	}
-
 }

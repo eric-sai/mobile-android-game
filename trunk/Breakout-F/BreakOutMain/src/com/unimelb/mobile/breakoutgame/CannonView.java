@@ -468,6 +468,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 							father.sendMessage(6);
 							father.sendMessage(7);
 							updateServRec();
+							currtLevel = 1;
 							newGame("Breakout-level1"); // set up and start a new game
 						}
 					} 
@@ -514,6 +515,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 							father.sendMessage(6);
 							father.sendMessage(7);
 							updateServRec();
+							currtLevel = 1;
 							newGame("Breakout-level1"); // set up and start a new game
 						}
 					} 

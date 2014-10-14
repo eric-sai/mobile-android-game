@@ -30,7 +30,7 @@ public class BreakOutMain extends Activity implements OnClickListener{
 	// view settings 	
 	private Button enter;
 	private Button help;
-	private Button btnDownload; // btnDownload. added by JunHan 15/08/2014
+	private Button btnDownload;
 	private Button topten;
 	private Button localGame;
 	private Button exit;
@@ -199,7 +199,8 @@ public class BreakOutMain extends Activity implements OnClickListener{
 		
 		// download. Added by JunHan 15/08/2014
 		if (v.getId() == R.id.btnDownload) {
-			downLoad();		
+			
+			downLoad();	
 			downloaded = checkDownload();
 		}
 		

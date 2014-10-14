@@ -1,17 +1,10 @@
-/**
- * Copyright     2014     Renren.com
- * @author JunHan 
- *  All rights reserved.
- */
 package com.unimelb.mobile.breakout.server.po;
 
 import java.io.Serializable;
 
 
 public class User  implements Serializable{
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private int uid;
 	private String username;
@@ -41,6 +34,4 @@ public class User  implements Serializable{
 	public void setScore(int score) {
 		this.score = score;
 	}
-	
-
 }

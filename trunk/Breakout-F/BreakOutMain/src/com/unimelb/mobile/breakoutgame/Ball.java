@@ -217,13 +217,13 @@ public class Ball {
 					if(worldView.specStates[i][section]){
 						totalScore += 20;
 						worldView.totalScore += 20;
+						this.father.sendMessage(8);
 					}
 					else{
 						totalScore += 10;
 						worldView.totalScore += 10;
+						this.father.sendMessage(1);
 					}
-
-					this.father.sendMessage(1);
 					targetPiecesHit++;
 					worldView.targetPiecesHit++;
 				}

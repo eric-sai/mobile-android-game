@@ -1,5 +1,3 @@
-// CannonView.java
-// Displays the Cannon Game
 package com.unimelb.mobile.breakoutgame;
 
 import java.io.FileInputStream;
@@ -209,7 +207,8 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 		
 		int next = currtLevel;
-		if(next > 2 && !this.father.downloaded){
+		if(next > 2 && !downloaded){
+			showdownloaddialog();
 			next = 2;
 		}
 		this.father.nextScore = getNextLvLScore("Breakout-level"+Integer.toString(next));
@@ -411,6 +410,35 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 	}
+	
+	public void showdownloaddialog() {
+		// create a dialog displaying the given String
+		final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(
+				getContext());
+		
+		dialogBuilder.setTitle("Hint!");
+		dialogBuilder.setCancelable(false);
+		
+			// display number of shots fired and total time elapsed
+		dialogBuilder.setMessage("Download to play more levels!");
+		dialogBuilder.setPositiveButton("ok",
+				new DialogInterface.OnClickListener() {
+						// called when "Reset Game" Button is pressed
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialogIsDisplayed = false;
+						}
+					} 
+					);
+
+		activity.runOnUiThread(new Runnable() {
+			public void run() {
+				dialogIsDisplayed = true;
+				dialogBuilder.show(); // display the dialog
+			} 
+		}  
+		);
+	}
 
 	// display an AlertDialog when the game ends
 	public void showGameOverDialog(int messageId) {
@@ -498,6 +526,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 							dialogIsDisplayed = false;
 							currtLevel++;
 							if(currtLevel > 2 && !downloaded){
+								showdownloaddialog();
 								currtLevel = 2;
 							}
 							father.sendMessage(2);
@@ -548,6 +577,23 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 	}
 	
+	public boolean checkDownload(){
+		String res = "false";
+		try{
+			FileInputStream fin = this.getContext().openFileInput("BKT-DownloadConfig");
+			int length = fin.available();
+			byte[] buffer = new byte[length];
+			fin.read(buffer);
+			res = EncodingUtils.getString(buffer, "UTF-8");
+			fin.close();
+		}
+		catch(Exception e){
+			Log.e("FileNotFoundException", "Couldn't find or open policy file");
+			//e.printStackTrace();
+		}
+		return Boolean.parseBoolean(res);
+	}
+	
 	public void sendResultToServ(){
 		sendresult = new SendResultThread(playerId,servRec);
 		sendresult.start();
@@ -593,7 +639,7 @@ public class CannonView extends SurfaceView implements SurfaceHolder.Callback {
 		screenHeight = getHeight(); // store the height
 		
 		life = 2;
-		downloaded = father.downloaded;
+		downloaded = checkDownload();
 		currtLevel = this.father.currtlevel;
 		
 		Log.d("width:",Integer.toString(screenWidth));

@@ -22,7 +22,7 @@ import android.util.Log;
 public class SendResultThread extends Thread{
 	
 	public final List<NameValuePair> params = new ArrayList<NameValuePair>();
-	private final static String SERVER_IP = "10.9.251.190";
+	private final static String SERVER_IP = "192.168.0.3";
 	private final static String SERVER_PORT = "8080";
 	private final static String SERVER_NAME = "BreakOutGameServer";
 	

@@ -102,9 +102,13 @@ public class Topten extends Activity implements OnClickListener{
 		gettop = new GetToptenThread();
 		gettop.start();
 		
+		while(GetToptenThread.toptenThread.isrunning){
+		}
+		
 		if(GetToptenThread.toptenThread.success){
 			int length = GetToptenThread.toptenThread.players.size();
 			for(int i =0;i<length;i++){
+				
 				playerName[i] = GetToptenThread.toptenThread.players.get(i).getUsername();
 				score[i] = GetToptenThread.toptenThread.players.get(i).getScore();
 				playerId[i] = GetToptenThread.toptenThread.players.get(i).getUid();		
@@ -284,7 +288,7 @@ public class Topten extends Activity implements OnClickListener{
 		dialogBuilder.setCancelable(false);
 		
 			// display number of shots fired and total time elapsed
-		dialogBuilder.setMessage("Connect to server failuer, only local record displayed!");
+		dialogBuilder.setMessage("Connect to server failure, only local record displayed!");
 		dialogBuilder.setPositiveButton("ok",
 				new DialogInterface.OnClickListener() {
 						// called when "Reset Game" Button is pressed

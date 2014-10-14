@@ -41,7 +41,7 @@ public class Login extends Activity {
 	protected static final int IS_NET_ERROR = 2;
 	public EditText username, password;
 	public Button Btn_login, Btn_regist, Btn_forgetpwd, Btn_guest;
-	public String url_login = "http://10.9.251.190:8080/BreakOutGameServer/LoginServlet";
+	public String url_login = "http://192.168.0.3:8080/BreakOutGameServer/LoginServlet";
 	public String out = null;
 	public User player;
 	

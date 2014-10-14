@@ -26,12 +26,12 @@ import android.util.Log;
 public class GetToptenThread extends Thread{
 	
 	public final List<NameValuePair> params = new ArrayList<NameValuePair>();
-	private final static String SERVER_IP = "10.9.251.190";
+	private final static String SERVER_IP = "192.168.0.3";
 	private final static String SERVER_PORT = "8080";
 	private final static String SERVER_NAME = "BreakOutGameServer";
 	
 	private final String REQUEST_URL = "http://" + SERVER_IP + ":"
-			+ SERVER_PORT + "/" + SERVER_NAME +"/" + "UpdateScore";
+			+ SERVER_PORT + "/" + SERVER_NAME +"/" + "TopServlet";
 	
 	public int servScr;
 	public List<User> players;
@@ -39,14 +39,13 @@ public class GetToptenThread extends Thread{
 	public static GetToptenThread toptenThread;
 	
 	public boolean success;
+	public boolean isrunning;
 	
 	public GetToptenThread(){
 		
 		toptenThread = this;
 		success = false;
-		params.add(new BasicNameValuePair("uid", ""+""));
-		params.add(new BasicNameValuePair("score", ""+""));
-	    
+		isrunning = true;
 	}
 	
 	public void run(){
@@ -65,24 +64,28 @@ public class GetToptenThread extends Thread{
 				byte[] bytes = EntityUtils
 						.toByteArray(entity);
 				ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bytes));
-				
+				success = true;
 				players = new ArrayList();
 				players = (List<User>) ois.readObject();
-				success = true;
 			}
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
+			isrunning =false;
 			e.printStackTrace();
 		} catch (ClientProtocolException e) {
 			// TODO Auto-generated catch block
+			isrunning =false;
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			isrunning =false;
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
+			isrunning =false;
 			e.printStackTrace();
 		}
+		isrunning =false;
 		
 	}
 }

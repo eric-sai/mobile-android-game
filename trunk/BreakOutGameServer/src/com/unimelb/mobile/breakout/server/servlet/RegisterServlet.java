@@ -1,15 +1,12 @@
 package com.unimelb.mobile.breakout.server.servlet;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import com.unimelb.mobile.breakout.server.dao.IUserDao;
 import com.unimelb.mobile.breakout.server.dao.impl.UserDaoImpl;

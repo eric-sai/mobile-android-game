@@ -51,7 +51,7 @@ public class DownloadServlet extends HttpServlet {
 	}
 	public HttpServletResponse download(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException{
-		String fileName = request.getParameter("fileName") +".xml";
+		String fileName = request.getParameter("fileName") +".txt";
 		String realpath=  getServletContext().getRealPath(File.separator);
 //		System.out.print(realpath);
 		String path = realpath+ filePath+fileName;

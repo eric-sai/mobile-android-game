@@ -1,8 +1,3 @@
-/**
- * Copyright     2014     Renren.com
- * @author JunHan 
- *  All rights reserved.
- */
 package com.unimelb.mobile.breakout.server.tools;
 
 import java.io.ByteArrayOutputStream;

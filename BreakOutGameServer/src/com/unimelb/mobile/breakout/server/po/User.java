@@ -1,8 +1,4 @@
-/**
- * Copyright     2014     Renren.com
- * @author JunHan 
- *  All rights reserved.
- */
+
 package com.unimelb.mobile.breakout.server.po;
 
 import java.io.Serializable;

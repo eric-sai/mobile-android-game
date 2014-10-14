@@ -46,7 +46,7 @@ public class Regist extends Activity {
 
 	protected static final int IS_NET_ERROR = 1;
 
-	public String url_regist = "http://10.9.251.190:8080/BreakOutGameServer/RegisterServlet";
+	public String url_regist = "http://192.168.0.3:8080/BreakOutGameServer/RegisterServlet";
 
 	private Handler mHandler = new Handler() {
 		@Override
@@ -132,9 +132,6 @@ public class Regist extends Activity {
 					}
 				}
 			}
-
 		});
-
 	}
-
 }

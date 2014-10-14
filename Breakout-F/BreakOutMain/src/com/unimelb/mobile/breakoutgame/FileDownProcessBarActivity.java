@@ -12,7 +12,9 @@ import java.net.URL;
 import java.net.URLConnection;
  
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -27,7 +29,7 @@ import android.widget.Toast;
 
 public class FileDownProcessBarActivity extends Activity {
 	 /** Called when the activity is first created. */
-    private static final String Path="http://10.9.241.246:8080/BreakOutGameServer/DownloadServlet?fileName=test";
+    private static final String Path="http://192.168.0.3:8080/BreakOutGameServer/DownloadServlet?fileName=levels";
     private ProgressBar progressBar;
     private TextView textView;
     private Button button;
@@ -38,6 +40,7 @@ public class FileDownProcessBarActivity extends Activity {
     private OutputStream outputStream;
     
     public boolean success;
+    private boolean dialogIsDisplayed;
     
     public static FileDownProcessBarActivity fpba;
     @Override
@@ -48,9 +51,11 @@ public class FileDownProcessBarActivity extends Activity {
         textView=(TextView) findViewById(R.id.tvDownload);
         fpba = this;
         success = false;
+        dialogIsDisplayed = false;
         button=(Button) findViewById(R.id.btnDL);
         button.setOnClickListener(new ButtonListener());
     }
+    
     class ButtonListener implements OnClickListener{
  
         @Override
@@ -89,7 +94,6 @@ public class FileDownProcessBarActivity extends Activity {
             	updatedownload();
                 Toast.makeText(getApplicationContext(), "Download Completed", Toast.LENGTH_LONG).show();
                 break;
-                 
             default:
                 break;
             }
@@ -117,37 +121,30 @@ public class FileDownProcessBarActivity extends Activity {
  
     private void DownFile(String urlString)
     {
-         
-        /*
-         * 连接到服务器
-         */
-         
         try {
              URL url=new URL(urlString);
              connection=url.openConnection();
-             if (connection.getReadTimeout()==5) {
-                Log.i("---------->", "当前网络有问题");
-                // return;
-               }
+             connection.setReadTimeout(5000);
              inputStream=connection.getInputStream();
              
         } catch (MalformedURLException e1) {
             // TODO Auto-generated catch block
+        	showalertDialog();
             e1.printStackTrace();
+            return;
         } catch (IOException e) {
             // TODO Auto-generated catch block
+        	showalertDialog();
             e.printStackTrace();
+            return;
         }
-         
-        /*
-         * 
-         */
+
         String savePAth=Environment.getExternalStorageDirectory()+"/DownFile";
         File file1=new File(savePAth);
         if (!file1.exists()) {
             file1.mkdir();
         }
-        String savePathString=Environment.getExternalStorageDirectory()+"/DownFile/"+"test.xml";
+        String savePathString=Environment.getExternalStorageDirectory()+"/DownFile/"+"levels.txt";
         File file =new File(savePathString);
         if (!file.exists()) {
             try {
@@ -157,9 +154,7 @@ public class FileDownProcessBarActivity extends Activity {
                 e.printStackTrace();
             }  
         }
-        /*
-         * 向SD卡中写入文件,用Handle传递线程
-         */
+
         Message message=new Message();
         try {
             outputStream=new FileOutputStream(file);
@@ -186,4 +181,32 @@ public class FileDownProcessBarActivity extends Activity {
             e.printStackTrace();
         }
     }
+    
+	public void showalertDialog() {
+		// create a dialog displaying the given String
+		final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+		
+		dialogBuilder.setTitle("Alert");
+		dialogBuilder.setCancelable(false);
+		
+			// display number of shots fired and total time elapsed
+		dialogBuilder.setMessage("Connection Timeout!");
+		dialogBuilder.setPositiveButton("ok",
+				new DialogInterface.OnClickListener() {
+						// called when "Reset Game" Button is pressed
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialogIsDisplayed = false;
+						}
+					}
+					);
+
+		this.runOnUiThread(new Runnable() {
+			public void run() {
+				dialogIsDisplayed = true;
+				dialogBuilder.show(); // display the dialog
+			} 
+		} 
+		);
+	}
 }

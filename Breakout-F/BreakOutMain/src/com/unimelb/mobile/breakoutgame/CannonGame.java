@@ -1,4 +1,3 @@
-// CannonGame.java
 // Main Activity for the Cannon Game app.
 package com.unimelb.mobile.breakoutgame;
 
@@ -49,7 +48,6 @@ public class CannonGame extends Activity implements OnClickListener {
 	public String playerName;
 	public int playerId;
 	public int servRec;
-	// Handler. added by JunHan 15/08/2014
 	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
 		@Override
@@ -95,6 +93,16 @@ public class CannonGame extends Activity implements OnClickListener {
 					// refresh rank
 					rank.setText(getRank());
 					break;
+				case 8:
+					//score updated
+					totalscore +=20;
+					String lastsc = highstScore();
+					if(totalscore > Integer.parseInt(lastsc)){
+						lastScore.setText("   " + Integer.toString(totalscore));
+					}
+					currtscoreView.setText("   " + Integer.toString(totalscore));
+					break;
+					
 				case 0:
 					//for display next lvl score
 					nextLvlScore.setText("    " + Integer.toString(nextScore));
@@ -158,9 +166,6 @@ public class CannonGame extends Activity implements OnClickListener {
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 	} // end method onCreate
 
-	/**
-	 * write download file to local Modified by JunHan 20/08/2014
-	 * */
 	public void writeFiles(String name, String file) {
 		// Log.d("log", "writeFiles");
 		try {
